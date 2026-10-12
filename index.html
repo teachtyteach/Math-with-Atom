@@ -4537,6 +4537,6 @@ home();
 setTimeout(checkBadges,600);
 </script>
 
-<script>try{if("serviceWorker"in navigator&&/^https?:/.test(location.protocol))addEventListener("load",function(){navigator.serviceWorker.register("launch-pad-sw.js").catch(function(){})})}catch(e){}</script>
+<script>try{if("serviceWorker"in navigator&&/^https?:/.test(location.protocol))addEventListener("load",function(){navigator.serviceWorker.register("launch-pad-sw.js",{updateViaCache:"none"}).then(function(r){r.update();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")r.update()})}).catch(function(){})})}catch(e){}</script>
 </body>
 </html>
