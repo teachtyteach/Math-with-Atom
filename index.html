@@ -1086,6 +1086,14 @@ body[data-tab]:not([data-tab=""]) #tabbar{display:flex}
 .mini{width:92px}
 #app .seg button{border-radius:999px!important;flex:none!important}
 #app .seg{overflow:visible!important;border-radius:0!important}
+/* no visible scroll bar, still scrollable */
+html,body{scrollbar-width:none;-ms-overflow-style:none}
+html::-webkit-scrollbar,body::-webkit-scrollbar,*::-webkit-scrollbar{width:0!important;height:0!important;display:none}
+*{scrollbar-width:none}
+/* tighter home */
+.lrow{padding:9px 14px}
+.lic{width:32px;height:32px}
+#app{gap:12px}
 
 </style>
 
@@ -4296,6 +4304,14 @@ const pbar=(pct,col)=>`<span class="pbar"><i style="width:${Math.max(0,Math.min(
 const rowBtn=(o)=>`<button class="lrow${o.cls?' '+o.cls:''}" ${o.attr||''}><span class="lic${o.icls?' '+o.icls:''}">${o.icon||''}</span><span class="lbody"><b>${o.t}</b>${o.s?`<span>${o.s}</span>`:''}</span><span class="lend">${o.end!=null?o.end:AI.chev}</span></button>`;
 function greeting(){const h=new Date().getHours();return h<5?'Up late':h<12?'Good morning':h<17?'Good afternoon':'Good evening'}
 
+function unitListHTML(){
+  const units=UNITS.map(u=>{const op=unitOpen(u.n);
+    if(!op){const need=(PREREQS[u.n]||[]).filter(k=>!unitPassed(k));return {u,op,html:`<button class="urow locked" data-unit="${u.n}"><span class="unum">${AI.lock}</span><span class="ubody"><b>${u.name}</b><span class="meta">${gated(u.n)&&!need.length?'Opens in spring':'Pass '+need.map(k=>'Unit '+k).join(' + ')+' test'+(need.length>1?'s':'')+' to unlock'}</span></span></button>`}}
+    const tm=u.topics.filter(([id])=>topicMastered(id)).length,T0=S.tests[u.n],fl=flaggedIn(u).length;
+    return {u,op,html:`<button class="urow${T0&&T0.passed?' passed':''}" data-unit="${u.n}"><span class="unum">${T0&&T0.passed?AI.check:u.n}</span><span class="ubody"><b>${u.name}</b><span class="meta">${tm}/${u.topics.length} topics mastered${T0&&T0.passed?` · Test ${T0.perfect?'100%':'passed'}`:''}${fl?` · <em>${fl} to review</em>`:''}</span>${pbar(100*tm/u.topics.length)}</span><span class="lend">${AI.chev}</span></button>`}});
+  const open=units.filter(x=>x.op),locked=units.filter(x=>!x.op),showL=st.showLocked?locked:locked.slice(0,1);
+  return `<div class="ulist">${open.map(x=>x.html).join('')}${showL.map(x=>x.html).join('')}</div>${locked.length>1?`<button class="linkb" data-act="tglock2">${st.showLocked?'Hide locked units':`Show ${locked.length-1} more locked unit${locked.length-1>1?'s':''}`}</button>`:''}`;
+}
 /* ---- HOME ---- */
 home=function(){
   applyShields();st.screen='home';st.mode=null;
@@ -4309,11 +4325,6 @@ home=function(){
   const seasonMini=s?(()=>{const stt=seasonStateOf(s),t=seasonTasks(s.id);return mini('',`--sc:${s.c1}`,`<i>${s.emoji}</i>`,s.short,stt==='soon'?'Starts soon':`${Math.min(t,SEASON_MAIN)}/${SEASON_MAIN}`,pbar(stt==='soon'?0:100*t/SEASON_MAIN,s.c1),`data-act="season" data-sid="${s.id}"`)})():'';
   const wk=weekNow();
   const nudge=totalSolved()>=15&&(!S.lastBackup||(Date.now()-new Date(S.lastBackup.replace(/-/g,'/')).getTime())>5*864e5||(new Date().getDay()===5&&S.lastBackup!==today()));
-  const units=UNITS.map(u=>{const op=unitOpen(u.n);
-    if(!op){const need=(PREREQS[u.n]||[]).filter(k=>!unitPassed(k));return {u,op,html:`<button class="urow locked" data-unit="${u.n}"><span class="unum">${AI.lock}</span><span class="ubody"><b>${u.name}</b><span class="meta">${gated(u.n)&&!need.length?'Opens in spring':'Pass '+need.map(k=>'Unit '+k).join(' + ')+' test'+(need.length>1?'s':'')+' to unlock'}</span></span></button>`}}
-    const tm=u.topics.filter(([id])=>topicMastered(id)).length,T0=S.tests[u.n],fl=flaggedIn(u).length;
-    return {u,op,html:`<button class="urow${T0&&T0.passed?' passed':''}" data-unit="${u.n}"><span class="unum">${T0&&T0.passed?AI.check:u.n}</span><span class="ubody"><b>${u.name}</b><span class="meta">${tm}/${u.topics.length} topics mastered${T0&&T0.passed?` · Test ${T0.perfect?'100%':'passed'}`:''}${fl?` · <em>${fl} to review</em>`:''}</span>${pbar(100*tm/u.topics.length)}</span><span class="lend">${AI.chev}</span></button>`}});
-  const open=units.filter(x=>x.op),locked=units.filter(x=>!x.op),showL=st.showLocked?locked:locked.slice(0,1);
   app.innerHTML=`<header class="ahead home"><h1 class="abrand">Atom Math<span>.</span></h1><span class="hright">${S.teacher?'<button class="tchip" data-act="teacher">Teacher</button>':''}${!S.teacher&&S.tpause&&Date.now()-S.tpause<2*3600*1000?'<button class="tchip" data-act="tresume">Back to teacher</button>':''}<button class="peek mood-${moodOf()||'ok'}" data-act="atomtalk" aria-label="Atom"><img src="${MASCOT}" alt="" width="40" height="38">${moodOf()==='sleepy'?'<span class="zz" aria-hidden="true">z</span>':''}</button></span></header>
   <button class="arank" data-tab-go="stats" aria-label="Your rank. Open stats"><span class="ark"><span class="arkl">${M?emblemMaster(22):emblem(rp,22)}<span class="clab">RANK</span><b style="color:var(--r-${M?'champion':r.cls})">${M?'Master':r.full}</b></span><span class="arkn">${nextTxt}</span></span>${pbar(M?100:pct)}</button>
   <div class="greetrow"><div><p class="greet">${greeting()}${S.name?', '+hwEsc(S.name):''}</p><p class="titleline">${hwEsc(ttl)} · ${rp.toLocaleString('en-US')} RP</p></div><div class="minis">
@@ -4333,9 +4344,6 @@ home=function(){
     ${rowBtn({icon:AI.q,icls:'q',t:'Mystery problem',s:ms2==='win'?'Solved. New one tomorrow.':ms2==='miss'?'New one tomorrow.':`One try · +${MYSTERY_RP} RP`,attr:'data-act="mystery"',end:ms2==='win'?`<span class="okc">${AI.check}</span>`:AI.chev})}
     ${n?rowBtn({icon:AI.redo,icls:'bad',t:'My Mistakes',s:`${n} to fix in ${Object.keys(S.mist).length} topic${Object.keys(S.mist).length>1?'s':''}`,attr:'data-act="mist"'}):''}
   </div>
-  <h2 class="sect">Units</h2>
-  <div class="ulist">${open.map(x=>x.html).join('')}${showL.map(x=>x.html).join('')}</div>
-  ${locked.length>1?`<button class="linkb" data-act="tglock">${st.showLocked?'Hide locked units':`Show ${locked.length-1} more locked unit${locked.length-1>1?'s':''}`}</button>`:''}
   ${madeby}`;
   const h=new Date().getHours();if((h>=22||h<5)&&S.bedNudge!==today()&&!S.teacher){S.bedNudge=today();save();setTimeout(()=>toast("It's late. Get some sleep. Atom will be here tomorrow.",'up'),900)}
 };
@@ -4350,14 +4358,8 @@ function playScreen(){
     <button class="gm" data-act="surv" data-mix="1"><span class="gi" style="--gc:var(--bad)">${AI.heart}</span><b>Last Stand</b><span>${SURV_LIVES} lives</span><small>Best ${S.best.surv.all||0}</small></button>
     ${rk?`<button class="gm" data-act="ranked"><span class="gi" style="--gc:var(--r-gold)">${AI.trophy}</span><b>Ranked</b><span>vs. robots</span><small>Preview</small></button>`:`<div class="gm off" aria-label="Ranked is coming soon"><span class="gi">${AI.lock}</span><b>Ranked</b><span>Coming soon</span></div>`}
   </div>
-  <h2 class="sect">Daily</h2>
-  <div class="card list">
-    ${rowBtn({icon:AI.flame,icls:'fl',t:'Daily warm-up',s:wd?'Done today':'3 quick problems',attr:'data-act="warm"',end:wd?`<span class="okc">${AI.check}</span>`:AI.chev})}
-    ${rowBtn({icon:AI.q,icls:'q',t:'Mystery problem',s:ms2==='win'?'Solved today':ms2==='miss'?'New one tomorrow':`One try · +${MYSTERY_RP} RP`,attr:'data-act="mystery"',end:ms2==='win'?`<span class="okc">${AI.check}</span>`:AI.chev})}
-    ${rowBtn({icon:AI.redo,icls:'bad',t:'My Mistakes',s:n?`${n} to fix`:'Nothing to fix right now',attr:n?'data-act="mist"':'disabled',end:n?AI.chev:''})}
-  </div>
-  <h2 class="sect">Practice a unit</h2>
-  <div class="ulist">${UNITS.filter(u=>unitOpen(u.n)).map(u=>{const tm=u.topics.filter(([id])=>topicMastered(id)).length;return `<button class="urow" data-unit="${u.n}"><span class="unum">${u.n}</span><span class="ubody"><b>${u.name}</b><span class="meta">${tm}/${u.topics.length} topics mastered</span></span><span class="lend">${AI.chev}</span></button>`}).join('')}</div>${madeby}`;
+  <h2 class="sect">Units</h2>
+  ${unitListHTML()}${madeby}`;
 }
 
 /* ---- STATS ---- */
@@ -4449,7 +4451,7 @@ trophies=statsScreen;locker=rewardsScreen;toolsScreen=settingsScreen;
 
 /* ---- clicks for the new screens ---- */
 app.addEventListener('click',e=>{
-  const b=e.target.closest('[data-tab-go],[data-rcat],[data-eq],[data-act="tmis"],[data-act="atomtalk"],[data-act="snd"],[data-act="whatsnew"]');if(!b)return;e.stopPropagation();
+  const b=e.target.closest('[data-tab-go],[data-rcat],[data-eq],[data-act="tmis"],[data-act="atomtalk"],[data-act="snd"],[data-act="whatsnew"],[data-act="tglock2"]');if(!b)return;e.stopPropagation();
   if(b.dataset.tabGo)return goTab(b.dataset.tabGo);
   if(b.dataset.rcat){rewardsCat(b.dataset.rcat);return window.scrollTo(0,0)}
   if(b.dataset.eq){const [cat,id]=b.dataset.eq.split(':');S.look[cat]=id;save();applyLook();const y=window.scrollY;rewardsCat(cat);window.scrollTo(0,y);return toast('Equipped','up')}
@@ -4458,6 +4460,7 @@ app.addEventListener('click',e=>{
   if(a==='atomtalk'){const p=b;p.classList.remove('hop');void p.offsetWidth;p.classList.add('hop');return toast(pick(ATOM_LINES()))}
   if(a==='snd'){S.sound=!S.sound;save();sfx('good');return settingsScreen()}
   if(a==='whatsnew')return whatsNew();
+  if(a==='tglock2'){st.showLocked=!st.showLocked;const y=window.scrollY;playScreen();window.scrollTo(0,y);return}
 },true);
 /* back buttons on old sub-screens that belonged to Settings */
 (function(){
@@ -4470,6 +4473,10 @@ WHATS.unshift(['A fresh new look','Atom Math now matches Atom: new tabs at the b
 
 /* ---- Atom Math polish: mystery back button, footer ---- */
 (function(){const d=decorate;decorate=function(){d();if(st.p&&st.p.mystery){const b=app.querySelector('.back');if(b&&!b.dataset.tabGo){b.removeAttribute('data-go');b.dataset.tabGo='home';b.innerHTML=AI.back+'Home'}}}})();
+/* unit lists live in Play now: "All units" goes back to Play */
+(function(){const fix=()=>{const b=app.querySelector('.back');if(b&&b.dataset.go==='home'&&/All units/.test(b.textContent)){b.removeAttribute('data-go');b.dataset.tabGo='play';b.innerHTML=AI.back+'Play'}};
+  const us=unitScreen;unitScreen=function(){us.apply(this,arguments);fix()};
+  const ls=lockScreen;lockScreen=function(){ls.apply(this,arguments);fix()};})();
 
 window.__G={G,gen,startRanked,genEasy,rampLevel,applyShields,parseNum,close,UNITS};
 applyLook();
