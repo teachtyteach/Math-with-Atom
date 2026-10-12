@@ -1116,6 +1116,38 @@ body{height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior-y:none;-w
 @media (max-width:560px){#overlay:not([hidden]){align-items:flex-end}#overlay .ovbox{max-height:92dvh;overflow-y:auto}}
 #updbar{all:unset;box-sizing:border-box;position:fixed;left:50%;transform:translateX(-50%);top:max(10px,env(safe-area-inset-top));z-index:60;display:flex;align-items:center;gap:10px;padding:10px 18px;border-radius:999px;background:var(--btn);color:var(--btn-ink);font:500 14px var(--body);cursor:pointer;box-shadow:0 8px 24px -8px rgba(0,0,0,.45)!important;white-space:nowrap}
 #updbar b{font-weight:700}#updbar span{opacity:.8}
+/* iPhone: size the scroll box to the part of the screen you can actually see */
+html{height:100%;height:100dvh}
+body{height:100%;height:100dvh}
+#app{padding-bottom:calc(40px + env(safe-area-inset-bottom))}
+body[data-tab]:not([data-tab=""]) #app{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+/* settings tabs (Atom style) */
+.stabs{display:flex;gap:6px;overflow-x:auto;margin-top:-4px!important;padding-bottom:2px;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 18px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 18px),transparent)}
+.stabs button{all:unset;box-sizing:border-box;cursor:pointer;flex:none;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font:600 14px var(--body);color:var(--muted)}
+.stabs button[aria-selected=true]{background:var(--btn);color:var(--btn-ink);border-color:var(--btn)}
+.slrow{display:grid;grid-template-columns:auto 1fr 3.2em;gap:10px;align-items:center;padding:8px 0 2px;border-top:1px solid var(--line)}
+.slrow b{text-align:right;font:600 14px var(--body)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.adot{width:18px;height:18px;border-radius:50%;display:block}
+.preview2 .pvask{font:400 19px/1.4 var(--display);margin:6px 0 4px}.preview2 .eq{font:600 22px var(--display);text-align:center;margin:6px 0 10px}
+.preview2 .row{justify-content:center}
+.card.empty{display:flex!important;gap:14px;align-items:center}.card.empty b{font:600 17px var(--display)}
+.ebc{font:600 56px/1 var(--display);margin:8px 0;color:var(--accent)}
+.shead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.shead b{font:600 20px var(--display)}
+.xbtn{all:unset;cursor:pointer;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);color:var(--muted);font-size:14px}
+.xbtn.abs{position:absolute;right:12px;top:12px}
+.ptext{text-align:left;display:grid;gap:10px;font-size:15px;line-height:1.5}.ptext p{margin:0}
+.toast .tm{width:28px;height:auto;margin:-6px 8px -6px -6px;vertical-align:middle}
+.toast{display:flex;align-items:center}
+.toast[hidden]{display:none!important}
+body.simple .peek,body.simple .pvbot,body.simple .welbot,body.simple .ovbot,body.simple .flyin{display:none!important}
+body.still #app>*,body.still .pbar i,body.still .peek img,body.still #overlay .ovbox{animation:none!important}
+body.still .flyin{display:none!important}
+.stabs{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;overflow:visible;-webkit-mask-image:none;mask-image:none;padding:3px;border:1px solid var(--line);border-radius:999px;background:var(--surface)}
+.stabs button{padding:7px 2px;border:0;text-align:center;font-size:13px;background:transparent}
+.stabs button[aria-selected=true]{background:var(--btn);color:var(--btn-ink)}
+#app .card>.tool:first-child{border-top:0;padding-top:0}
+#app .seg button{padding:7px 12px}
 
 </style>
 
@@ -2222,7 +2254,7 @@ function sfx(kind){
   try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();
     const seq={good:[[660,.07],[880,.12]],bad:[[196,.2]],rank:[[523,.1],[659,.1],[784,.1],[1047,.3]],mission:[[784,.08],[1047,.14]],badge:[[880,.07],[1175,.07],[1568,.16]],tick:[[1200,.04]],end:[[523,.12],[392,.22]]}[kind]||[];
     let t=actx.currentTime;
-    for(const [f,d] of seq){const o=actx.createOscillator(),g=actx.createGain();o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(.12,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g).connect(actx.destination);o.start(t);o.stop(t+d+.02);t+=d*.9}
+    for(const [f,d] of seq){const o=actx.createOscillator(),g=actx.createGain();o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(.12*((S.pref&&S.pref.vol!=null)?S.pref.vol:1)+.0001,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g).connect(actx.destination);o.start(t);o.stop(t+d+.02);t+=d*.9}
   }catch(e){}
 }
 
@@ -3852,7 +3884,7 @@ app.addEventListener('click',e=>{const b=e.target.closest('[data-act="tglock"]')
 
 
 const CHEERS=['Nice!','Boom!','Let\'s go!','Strong work!','You got it!','On a roll!','Brilliant!','Yes!'];
-const cheer=()=>pick(CHEERS);
+let cheer=()=>pick(CHEERS);
 /* ---- unlock kinds from streaks, weekly challenges and totals ---- */
 (function(){
   const rm=reqMet,rl=reqLabel;
@@ -4047,7 +4079,7 @@ app.addEventListener('click',e=>{
    last-7-days chart, bedtime nudge, view as student, reading fonts, mystery box, fly-in
    ====================================================================== */
 /* ---- What's New: bump WHATS_VER whenever a big update ships ---- */
-const WHATS_VER='2026-10-12c',WHATS=[
+const WHATS_VER='2026-10-12d',WHATS=[
   ['Mystery box','Finish all 3 daily missions on 5 school days in a row to earn a mystery box. Some items are super rare.'],
   ['Daily mystery problem','One tricky problem a day. Solve it for bonus RP and detective badges.'],
   ['Weekly challenge','A new challenge every week with its own badge.'],
@@ -4084,7 +4116,7 @@ ov.addEventListener('click',e=>{
   const n=document.getElementById('welname');if(n){const v=n.value.trim().replace(/[^A-Za-z0-9 _-]/g,'');if(v){S.name=v;save()}}
   if(b.dataset.wel==='next')return welcome(+b.dataset.i+1);
   if(b.dataset.box==='locker'){ovHide();return locker()}
-  ovHide();home();
+  ovHide();if(st.screen==='home')home();
 },true);
 function startupPopups(){
   if(!S.welcomed){if(totalSolved()>0){S.welcomed=true;save()}else{setTimeout(()=>welcome(0),flyMs+100);return}}
@@ -4513,7 +4545,7 @@ new MutationObserver(()=>{if(!ov.hidden&&!ov.querySelector('.ovbox'))ov.hidden=t
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!ov.hidden){ov.hidden=true;ov.innerHTML=''}});
 
 /* ---- Updates: version number + "Update ready" bar ---- */
-const APP_VER='2026.10.12-4';
+const APP_VER='2026.10.12-6';
 function showUpdateBar(){
   if(document.getElementById('updbar'))return;
   const d=document.createElement('button');d.id='updbar';d.type='button';d.innerHTML='<b>Update ready</b><span>Tap to refresh</span>';
@@ -4525,11 +4557,109 @@ function checkUpdate(){
 }
 setTimeout(checkUpdate,8000);setInterval(checkUpdate,20*60*1000);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkUpdate()});
-(function(){const s0=settingsScreen;settingsScreen=function(){s0.apply(this,arguments);const a=app.querySelector('.card.about div');if(a)a.insertAdjacentHTML('beforeend',`<p class="fine">Version ${APP_VER} · <button class="linkb" data-act="chkupd" style="padding:0">Check for updates</button></p>`)}})();
 app.addEventListener('click',e=>{if(!e.target.closest('[data-act="chkupd"]'))return;e.stopPropagation();
   if(!navigator.onLine)return toast("You're offline. Updates come next time you're online.");
   fetch(location.pathname,{cache:'no-store'}).then(r=>r.text()).then(t=>{const m=t.match(/APP_VER='([^']+)'/);if(m&&m[1]!==APP_VER){showUpdateBar();toast('Update found')}else toast("You're up to date")}).catch(()=>toast("Couldn't check right now"))},true);
 WHATS.unshift(['Smoother pages','Short pages no longer scroll or bounce. There is a version number in Settings, and the app tells you when an update is ready.']);
+
+/* ======================================================================
+   ATOM MATH — round 3: Atom-style Settings tabs, comfort & access options,
+   Simple mode, eye breaks, auto night mode, sound volume, Privacy & Terms,
+   mascot toasts, empty states, sheet close buttons
+   ====================================================================== */
+S.pref=S.pref||{};
+const SET_TABS=[['profile','Profile'],['display','Display'],['learning','Learning'],['access','Access'],['more','More']];
+const tg=(on,attr,t,d)=>`<button class="tool" ${attr} role="switch" aria-checked="${!!on}"><span><b>${t}</b>${d?`<span class="fine">${d}</span>`:''}</span><i class="tgl${on?' on':''}"></i></button>`;
+const segOf=(name,cur,opts,attr)=>`<div class="seg" role="group" aria-label="${name}">${opts.map(([k,n])=>`<button ${attr}="${k}" aria-pressed="${String(cur)===String(k)}">${n}</button>`).join('')}</div>`;
+function settingsScreen(tab){
+  st.screen='settings';st.mode=null;tab=tab||st.setTab||'profile';st.setTab=tab;const P=S.pref,f=P.font||'default';
+  let body='';
+  if(tab==='profile')body=`
+    <div class="card"><h2>Your name</h2><p class="fine">Used for greetings and your backup file.</p><input type="text" id="sname" maxlength="30" value="${hwEsc(S.name||'')}" placeholder="First name" autocomplete="off"></div>
+    <div class="card list">${rowBtn({icon:AI.book,t:'Save or load my progress',s:S.lastBackup?'Last backup: '+S.lastBackup:'No backup yet',attr:'data-act="backup"'})}
+      ${rowBtn({icon:AI.rewards,t:'Rewards and themes',s:'Change your look',attr:'data-tab-go="rewards"'})}</div>
+    <div class="card">${tg(P.simple,'data-sp="simple"','Simple mode','Hides Atom the robot, cheers and confetti. Your progress still counts.')}</div>`;
+  if(tab==='display')body=`
+    <div class="card preview2"><span class="clab">PREVIEW</span><p class="ask pvask">Solve for x.</p><div class="eq">3x + 4 = 19</div><div class="row"><span class="btn small">Check</span><span class="btn ghost small">Hint</span></div></div>
+    <div class="card list">${rowBtn({icon:AI.rewards,t:'Theme',s:(LOCKER.theme.items.find(i=>i[0]===(themeUsable(S.look.theme)?S.look.theme:'auto'))||[0,'Auto'])[1],attr:'data-rcat="theme"'})}
+      ${rowBtn({icon:'<span class="adot" style="background:var(--accent)"></span>',t:'Accent color',s:(LOCKER.accent.items.find(i=>i[0]===S.look.accent)||[0,'Theme color'])[1],attr:'data-rcat="accent"'})}</div>
+    <div class="card"><h2>Font</h2>${segOf('Font',f,[['default','Normal'],['lexend','Easy read'],['dyslexic','Dyslexia-friendly']],'data-font')}
+      ${tg(P.space,'data-act="fspace"','Extra spacing','More room between letters and words.')}${tg(PREF('big',false),'data-pref="big"','Bigger text','Makes words larger.')}</div>`;
+  if(tab==='learning')body=`
+    <div class="card"><h2>Learning tools</h2><div class="toolist">${TOOLS.filter(t=>t[0]!=='big').map(([k,n,d,df])=>tg(PREF(k,df),`data-pref="${k}"`,n,d)).join('')}</div>
+    ${speechOK?'<div class="row" style="margin-top:8px"><button class="btn ghost small" data-act="listentest">Test the voice</button></div>':'<p class="fine">Read-aloud is not supported on this device.</p>'}</div>`;
+  if(tab==='access')body=`
+    <div class="card"><h2>Sound</h2>${tg(S.sound,'data-act="snd"','Sound effects','Chimes for right answers and rank-ups.')}
+      <div class="slrow"><span class="fine">Volume</span><input type="range" id="svol" min="0" max="100" step="10" value="${Math.round(100*(P.vol??1))}" aria-label="Volume" ${S.sound?'':'disabled'}><b>${Math.round(100*(P.vol??1))}%</b></div></div>
+    <div class="card"><h2>Comfort</h2><p class="fine">Eye breaks: a short rest during practice.</p>${segOf('Eye break',P.eye||0,[[0,'Off'],[10,'10 min'],[20,'20 min'],[30,'30 min']],'data-eye')}
+      <p class="fine" style="margin-top:10px">Night mode: switch to a dark theme in the evening.</p>${segOf('Night mode',P.night||0,[[0,'Off'],[19,'7 PM'],[20,'8 PM'],[21,'9 PM'],[22,'10 PM']],'data-night')}</div>
+    <div class="card">${tg(P.still,'data-sp="still"','Reduce motion','Turns off sliding and bouncing animations.')}</div>`;
+  if(tab==='more')body=`
+    <div class="card list">${rowBtn({icon:AI.sun,t:"What's new",s:'See the latest updates',attr:'data-act="whatsnew"'})}
+      ${rowBtn({icon:'<img src="'+MASCOT+'" alt="" width="22">',t:'Welcome tour',s:'See the welcome screens again',attr:'data-act="welagain"'})}
+      ${rowBtn({icon:AI.lock,t:'Privacy and terms',s:'Everything stays on this device',attr:'data-act="privacy"'})}
+      ${rowBtn({icon:AI.settings,t:'Teacher',s:S.teacher?'Teacher mode is on':'Password needed',attr:'data-act="teacher"'})}</div>
+    <div class="card"><h2>Reset</h2><p class="fine">Puts theme, font and comfort settings back to normal. Your progress is not touched.</p><div class="row" style="margin-top:8px"><button class="btn ghost small" data-act="resetdisp">Reset display settings</button></div></div>
+    <div class="card about"><img src="${MASCOT}" alt="" width="56" height="54"><div><b>Atom Math</b><p class="fine">Everything stays on this device. Nothing is sent anywhere. Works offline.</p><p class="fine">Made by Mr. Lovrien for STEM Launch.</p><p class="fine">Version ${APP_VER} · <button class="linkb" data-act="chkupd" style="padding:0">Check for updates</button></p></div></div>`;
+  app.innerHTML=`${ahead('Settings')}<div class="stabs" role="tablist">${SET_TABS.map(([k,n])=>`<button role="tab" data-stab="${k}" aria-selected="${k===tab}">${n}</button>`).join('')}</div>${body}`;
+  const n=document.getElementById('sname');if(n)n.addEventListener('change',()=>{S.name=n.value.trim().replace(/[^A-Za-z0-9 _-]/g,'');save();toast('Saved','up')});
+  const v=document.getElementById('svol');if(v)v.addEventListener('input',()=>{P.vol=v.value/100;v.nextElementSibling.textContent=v.value+'%';save()}),v&&v.addEventListener('change',()=>sfx('good'));
+}
+toolsScreen=settingsScreen;
+app.addEventListener('click',e=>{
+  const b=e.target.closest('[data-stab],[data-sp],[data-eye],[data-night],[data-act="welagain"],[data-act="privacy"],[data-act="resetdisp"]');if(!b)return;e.stopPropagation();
+  const P=S.pref;
+  if(b.dataset.stab)return settingsScreen(b.dataset.stab);
+  if(b.dataset.sp){P[b.dataset.sp]=!P[b.dataset.sp];save();applyComfort();return settingsScreen()}
+  if(b.dataset.eye!=null){P.eye=+b.dataset.eye;save();eyeMs=0;return settingsScreen()}
+  if(b.dataset.night!=null){P.night=+b.dataset.night;save();applyLook();return settingsScreen()}
+  const a=b.dataset.act;
+  if(a==='welagain')return welcome(0);
+  if(a==='privacy')return ovShow(`<div class="shead"><b>Privacy and terms</b><button class="xbtn" data-wel="done" aria-label="Close">✕</button></div><div class="ptext">
+    <p><b>Your progress stays on this device.</b> Atom Math saves your rank, streak and answers in this browser only. Nothing is sent to a server, and there are no accounts, ads or tracking.</p>
+    <p><b>Backups are yours.</b> A save file or save code only goes where you put it.</p>
+    <p><b>Your name is optional.</b> It is used for greetings and backup file names, on this device only.</p>
+    <p><b>For learning.</b> Atom Math is a free practice tool made by Mr. Lovrien for STEM Launch students. It is offered as is, for classroom practice.</p></div><div class="ovacts"><button class="btn" data-wel="done">Got it</button></div>`);
+  if(a==='resetdisp'){S.look.theme='auto';S.look.accent='theme';Object.assign(P,{font:'default',space:false,big:false,still:false,night:0,eye:0});save();applyLook();applyFont();applyPrefs();applyComfort();toast('Display settings reset');return settingsScreen()}
+},true);
+
+/* ---- Simple mode + reduce motion ---- */
+function applyComfort(){document.body.classList.toggle('simple',!!S.pref.simple);document.body.classList.toggle('still',!!S.pref.still)}
+applyComfort();
+(function(){const c=cheer;cheer=function(){return S.pref.simple?'':c()}})();
+(function(){const cf=confetti;confetti=function(){if(S.pref.simple||S.pref.still)return;return cf.apply(this,arguments)}})();
+(function(){const f=flyIn;flyIn=function(){if(S.pref.simple||S.pref.still)return;f()}})();
+
+/* ---- Auto night mode: use the Dark theme in the evening ---- */
+(function(){const tk=themeKey;themeKey=function(){const k=tk(),h=new Date().getHours(),n=S.pref.night||0;
+  if(n&&(h>=n||h<6)&&!darkOf(k==='auto'?(osDark()?'dark':'light'):k))return 'dark';return k}})();
+setInterval(()=>{if(S.pref.night)applyLook()},5*60*1000);
+
+/* ---- Eye breaks during practice (not during timed games or tests) ---- */
+let eyeMs=0,eyeLast=Date.now();
+setInterval(()=>{const now=Date.now(),dt=now-eyeLast;eyeLast=now;
+  if(!S.pref.eye||document.visibilityState!=='visible'||!ov.hidden)return;
+  if(st.screen!=='practice'||['rapid','surv','test','placement','ranked'].includes(st.mode))return;
+  eyeMs+=Math.min(dt,15000);if(eyeMs>=S.pref.eye*60000){eyeMs=0;eyeBreak()}},5000);
+function eyeBreak(){
+  let s=20;ovShow(`<div class="ovkick">Eye break</div><div class="ovrank" style="font-size:24px">Look far away</div><p class="welp">Find something across the room and look at it. Blink a few times.</p><div class="ebc" id="ebc">20</div><div class="ovacts"><button class="btn ghost" data-wel="done">Skip</button></div>`);
+  const t=setInterval(()=>{s--;const el=document.getElementById('ebc');if(!el){clearInterval(t);return}el.textContent=s;if(s<=0){clearInterval(t);ovHide();toast('Nice. Back to it!')}},1000);
+}
+
+/* ---- Sound volume ---- */
+(function(){const s0=sfx;sfx=function(k){if(S.sound&&(S.pref.vol??1)<=0)return;return s0(k)}})();
+
+/* ---- Toasts with Atom ---- */
+(function(){const nt=nextToast;nextToast=function(){nt();const t=document.getElementById('toast');if(!t||t.hidden||S.pref.simple)return;if(!t.querySelector('img'))t.insertAdjacentHTML('afterbegin',`<img class="tm" src="${MASCOT}" alt="">`)}})();
+
+/* ---- Stats empty state ---- */
+(function(){const s0=statsScreen;statsScreen=function(){s0.apply(this,arguments);if(totalSolved()>0||S.pref.simple)return;const h=app.querySelector('.ahead');if(h)h.insertAdjacentHTML('afterend',`<div class="card empty"><img src="${MASCOT}" alt="" width="84"><div><b>Your stats start with your first answer.</b><p class="fine">Solve a few problems and your streak, chart and calendar fill in here.</p><button class="btn small" data-act="cont" style="margin-top:8px">Start practicing</button></div></div>`)}})();
+trophies=statsScreen;
+
+/* ---- sheet header close button on long sheets ---- */
+(function(){const w=whatsNew;whatsNew=function(){w();const b=ov.querySelector('.ovbox');if(b)b.insertAdjacentHTML('afterbegin','<button class="xbtn abs" data-wel="done" aria-label="Close">✕</button>')}})();
+
+WHATS.unshift(['Settings tabs','Settings now has tabs like Atom: Profile, Display, Learning, Access and More. New: Simple mode, eye breaks, night mode and sound volume.']);
 
 window.__G={G,gen,startRanked,genEasy,rampLevel,applyShields,parseNum,close,UNITS};
 applyLook();
