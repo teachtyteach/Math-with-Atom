@@ -1094,6 +1094,19 @@ html::-webkit-scrollbar,body::-webkit-scrollbar,*::-webkit-scrollbar{width:0!imp
 .lrow{padding:9px 14px}
 .lic{width:32px;height:32px}
 #app{gap:12px}
+/* no extra scrolling */
+html,body{overscroll-behavior:none}
+body[data-tab]:not([data-tab=""]) #app{padding-bottom:calc(78px + env(safe-area-inset-bottom))}
+.gm{padding:12px 6px}
+.gm .gi{width:40px;height:40px}
+.urow{min-height:64px;padding:10px 14px}
+.rcard{min-height:0;padding:10px 12px}
+.preview .pvrow{margin-top:4px}
+.pvbot{width:52px}
+.preview .emblem{width:46px;height:46px}
+body[data-screen="practice"] #app .rankcard,body[data-screen="practice"] #app .foot{display:none!important}
+.rcard span{font-size:12px;line-height:1.3}
+.rcards{gap:8px}
 
 </style>
 
@@ -4295,7 +4308,7 @@ const TAB_OF={home:'home',play:'play',stats:'stats',rewards:'rewards',rewcat:'re
   nav.innerHTML=MAIN_TABS.map(([k,n])=>`<button type="button" data-tab="${k}">${AI[k]}<span>${n}</span></button>`).join('');
   document.body.appendChild(nav);
   nav.addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b)goTab(b.dataset.tab)});})();
-function syncTabbar(){const t=TAB_OF[st.screen];document.body.dataset.tab=t||'';document.querySelectorAll('#tabbar [data-tab]').forEach(b=>{b.classList.toggle('on',b.dataset.tab===t);b.setAttribute('aria-current',b.dataset.tab===t?'page':'false')})}
+function syncTabbar(){const t=TAB_OF[st.screen];document.body.dataset.tab=t||'';document.body.dataset.screen=st.screen||'';document.querySelectorAll('#tabbar [data-tab]').forEach(b=>{b.classList.toggle('on',b.dataset.tab===t);b.setAttribute('aria-current',b.dataset.tab===t?'page':'false')})}
 new MutationObserver(syncTabbar).observe(app,{childList:true});
 function goTab(t){st.mode=null;({home,play:playScreen,stats:statsScreen,rewards:rewardsScreen,settings:settingsScreen})[t]();window.scrollTo(0,0)}
 const ahead=(title,backTab)=>`<header class="ahead">${backTab?`<button class="iconb" data-tab-go="${backTab}" aria-label="Back">${AI.back}</button>`:''}<h1 class="ah1">${title}</h1></header>`;
@@ -4344,7 +4357,7 @@ home=function(){
     ${rowBtn({icon:AI.q,icls:'q',t:'Mystery problem',s:ms2==='win'?'Solved. New one tomorrow.':ms2==='miss'?'New one tomorrow.':`One try · +${MYSTERY_RP} RP`,attr:'data-act="mystery"',end:ms2==='win'?`<span class="okc">${AI.check}</span>`:AI.chev})}
     ${n?rowBtn({icon:AI.redo,icls:'bad',t:'My Mistakes',s:`${n} to fix in ${Object.keys(S.mist).length} topic${Object.keys(S.mist).length>1?'s':''}`,attr:'data-act="mist"'}):''}
   </div>
-  ${madeby}`;
+  `;
   const h=new Date().getHours();if((h>=22||h<5)&&S.bedNudge!==today()&&!S.teacher){S.bedNudge=today();save();setTimeout(()=>toast("It's late. Get some sleep. Atom will be here tomorrow.",'up'),900)}
 };
 const ATOM_LINES=()=>{const m=moodOf();return m==='sleepy'?["Zzz… oh! Hi.","It's late. Rest up!"]:m==='excited'?["You're on a roll!","Let's keep that streak going!","Mystery problem today?"]:m==='sad'?["I missed you!","Let's start a new streak today."]:["Hi! Ready for some math?","Try today's mystery problem!","A little every day adds up."]};
@@ -4352,14 +4365,14 @@ const ATOM_LINES=()=>{const m=moodOf();return m==='sleepy'?["Zzz… oh! Hi.","It
 /* ---- PLAY ---- */
 function playScreen(){
   st.screen='play';st.mode=null;const rk=rankedOpen(),wd=warmDone(),ms2=mysteryState(),n=mistTotal();
-  app.innerHTML=`${ahead('Play')}<p class="lede">Problems come from all your open units.</p>
+  app.innerHTML=`${ahead('Play')}
   <div class="gmodes">
     <button class="gm" data-act="rapid" data-mix="1"><span class="gi" style="--gc:var(--accent)">${AI.bolt}</span><b>Quick Play</b><span>${RAPID_SECS} seconds</span><small>Best ${S.best.rapid.all||0}</small></button>
     <button class="gm" data-act="surv" data-mix="1"><span class="gi" style="--gc:var(--bad)">${AI.heart}</span><b>Last Stand</b><span>${SURV_LIVES} lives</span><small>Best ${S.best.surv.all||0}</small></button>
     ${rk?`<button class="gm" data-act="ranked"><span class="gi" style="--gc:var(--r-gold)">${AI.trophy}</span><b>Ranked</b><span>vs. robots</span><small>Preview</small></button>`:`<div class="gm off" aria-label="Ranked is coming soon"><span class="gi">${AI.lock}</span><b>Ranked</b><span>Coming soon</span></div>`}
   </div>
   <h2 class="sect">Units</h2>
-  ${unitListHTML()}${madeby}`;
+  ${unitListHTML()}`;
 }
 
 /* ---- STATS ---- */
@@ -4375,7 +4388,7 @@ function statsScreen(){
   <div class="card"><h2>Answers right, last 7 days</h2><div class="plot"><span class="tick">${mx}</span><div class="cols">${rows.map(([d,n],i)=>`<div class="col${i===6?' today':''}"><span class="val" style="bottom:calc(${Math.round(100*n/mx)}% + 2px)">${n||''}</span><span class="barv" style="height:${Math.round(100*n/mx)}%"></span></div>`).join('')}</div></div>
     <div class="days">${rows.map(([d],i)=>`<span class="${i===6?'today':''}">${d.toLocaleDateString(undefined,{weekday:'short'}).slice(0,2)}</span>`).join('')}</div><p class="fine" style="margin-top:8px">${tot} right this week.</p></div>
   <div class="card"><h2>My calendar</h2><div id="calbox">${calHTML(st.calOff||0)}</div></div>
-  <div class="card"><h2>Progress report</h2><p class="fine">A one-page summary you can print or save as a PDF.</p><div class="row" style="margin-top:10px"><button class="btn ghost" data-act="report">Open report</button></div></div>${madeby}`;
+  <div class="card"><h2>Progress report</h2><p class="fine">A one-page summary you can print or save as a PDF.</p><div class="row" style="margin-top:10px"><button class="btn ghost" data-act="report">Open report</button></div></div>`;
 }
 
 /* ---- REWARDS ---- */
@@ -4404,23 +4417,23 @@ function rewardsScreen(){
   const cnt=cat=>{const c=LOCKER[cat];const v=visItems(c);return `${v.filter(unlocked).length} of ${v.length} unlocked`};
   const th=LOCKER.theme.items.find(i=>i[0]===(themeUsable(S.look.theme)?S.look.theme:'auto'))||LOCKER.theme.items[0];
   app.innerHTML=`${ahead('Rewards')}
-  <div class="card preview"><span class="clab">YOUR LOOK</span><div class="pvrow">${M?emblemMaster(54):emblem(rp,54)}<div><b class="pvname" style="color:var(--r-${M?'champion':r.cls})">${M?'Master':r.full}</b><span class="pvt">${hwEsc(lookItem('title')[1])}</span><span class="fine">${th[1]} theme</span></div><img class="pvbot" src="${MASCOT}" alt=""></div></div>
+  <div class="card preview"><div class="pvrow">${M?emblemMaster(54):emblem(rp,54)}<div><b class="pvname" style="color:var(--r-${M?'champion':r.cls})">${M?'Master':r.full}</b><span class="pvt">${hwEsc(lookItem('title')[1])}</span><span class="fine">${th[1]} theme</span></div><img class="pvbot" src="${MASCOT}" alt=""></div></div>
   ${nu?`<div class="card nextu"><span class="clab">NEXT UNLOCK</span><b>${nu.it[2]} · ${Math.max(0,rpOfIdx(nu.i)-peakRp())} RP away</b><span class="fine">${nu.it[1]} ${({theme:'theme',accent:'accent color',title:'title',celeb:'rank-up effect'})[nu.cat]}</span></div>`:''}
   <div class="rcards">${REW_CATS.map(([k,n,d])=>`<button class="rcard" data-rcat="${k}"><b>${n}</b><span>${d}</span><small>${k==='badges'?`${BADGES.filter(b=>S.badges[b[0]]).length} of ${BADGES.filter(b=>!b[6]||S.badges[b[0]]).length} earned`:k==='box'?`${Object.keys(S.boxOwned||{}).length} of ${BOX_ITEMS.length} found${S.boxes?` · ${S.boxes} to open`:''}`:cnt(k)}</small></button>`).join('')}</div>
-  ${S.teacher?'<p class="fine">Teacher view: everything is open. Each tile shows what a student needs.</p>':''}${madeby}`;
+  ${S.teacher?'<p class="fine">Teacher view: everything is open. Each tile shows what a student needs.</p>':''}`;
 }
 function rewardsCat(cat){
   st.screen='rewcat';st.rcat=cat;const name=(REW_CATS.find(c=>c[0]===cat)||[])[1];
   if(cat==='badges'){
-    app.innerHTML=`${ahead('Badges','rewards')}<div class="badges">${BADGES.filter(b=>!b[6]||S.badges[b[0]]).map(b=>{const on=!!S.badges[b[0]];return `<div class="badge${on?' earned':''}"><span class="bmed">${medal(b,on,44)}</span><b>${b[1]}</b><span>${b[2]}</span>${on?`<small>Earned ${String(S.badges[b[0]]).replace(/^\d{4}-/,'')}</small>`:''}</div>`}).join('')}</div>${madeby}`;return}
+    app.innerHTML=`${ahead('Badges','rewards')}<div class="badges">${BADGES.filter(b=>!b[6]||S.badges[b[0]]).map(b=>{const on=!!S.badges[b[0]];return `<div class="badge${on?' earned':''}"><span class="bmed">${medal(b,on,44)}</span><b>${b[1]}</b><span>${b[2]}</span>${on?`<small>Earned ${String(S.badges[b[0]]).replace(/^\d{4}-/,'')}</small>`:''}</div>`}).join('')}</div>`;return}
   if(cat==='box'){
     const rk=['legendary','rare','common'];
     app.innerHTML=`${ahead('Mystery box','rewards')}<div class="card"><h2>How to earn one</h2><p class="fine">Finish all 3 daily missions on 5 school days in a row.</p>${pbar(100*(S.boxProg||0)/5,'#d99a00')}<p class="fine">${S.boxProg||0} of 5 days</p>${S.boxes?`<div class="row" style="margin-top:10px"><button class="btn" data-act="openbox">Open a box (${S.boxes})</button></div>`:''}</div>
-    ${rk.map(r=>`<h2 class="sect" style="color:${RAR[r].c}">${RAR[r].n}</h2><div class="igrid">${BOX_ITEMS.filter(it=>it[3]===r).map(it=>{const own=!!(S.boxOwned||{})[it[1]]||S.teacher;return `<div class="ritem${own?'':' locked'}">${own?itemSwatch(it[0],LOCKER[it[0]].items.find(x=>x[0]===it[1])):`<span class="qsw">?</span>`}<b>${own?it[2]:'???'}</b><span class="fine">${it[0]==='title'?'Title':'Theme'}</span></div>`}).join('')}</div>`).join('')}${madeby}`;return}
+    ${rk.map(r=>`<h2 class="sect" style="color:${RAR[r].c}">${RAR[r].n}</h2><div class="igrid">${BOX_ITEMS.filter(it=>it[3]===r).map(it=>{const own=!!(S.boxOwned||{})[it[1]]||S.teacher;return `<div class="ritem${own?'':' locked'}">${own?itemSwatch(it[0],LOCKER[it[0]].items.find(x=>x[0]===it[1])):`<span class="qsw">?</span>`}<b>${own?it[2]:'???'}</b><span class="fine">${it[0]==='title'?'Title':'Theme'}</span></div>`}).join('')}</div>`).join('')}`;return}
   const c=LOCKER[cat],items=visItems(c);let html='';
   if(cat==='theme'){const groups=[...new Set(items.map(i=>i[3]))];html=groups.map(g=>`<h2 class="sect">${g}</h2><div class="igrid">${items.filter(i=>i[3]===g).map(it=>tileOf(cat,it)).join('')}</div>`).join('')}
   else html=`<div class="igrid${cat==='title'?' wide':''}">${items.map(it=>tileOf(cat,it)).join('')}</div>`;
-  app.innerHTML=`${ahead(name,'rewards')}<p class="lede">${cnt2(cat)}</p>${html}${madeby}`;
+  app.innerHTML=`${ahead(name,'rewards')}<p class="lede">${cnt2(cat)}</p>${html}`;
 }
 const cnt2=cat=>{const v=visItems(LOCKER[cat]);return `${v.filter(unlocked).length} of ${v.length} unlocked. Your best rank counts, so you never lose one.`};
 function tileOf(cat,it){
