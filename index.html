@@ -1107,6 +1107,15 @@ body[data-tab]:not([data-tab=""]) #app{padding-bottom:calc(78px + env(safe-area-
 body[data-screen="practice"] #app .rankcard,body[data-screen="practice"] #app .foot{display:none!important}
 .rcard span{font-size:12px;line-height:1.3}
 .rcards{gap:8px}
+/* body is the scroll box: no page bounce when nothing to scroll */
+html{height:100%;overflow:hidden}
+body{height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior-y:none;-webkit-overflow-scrolling:touch}
+@media print{html,body{height:auto!important;overflow:visible!important}}
+/* sturdier overlay on phones */
+#overlay:not([hidden]){display:flex!important;align-items:center;justify-content:center}
+@media (max-width:560px){#overlay:not([hidden]){align-items:flex-end}#overlay .ovbox{max-height:92dvh;overflow-y:auto}}
+#updbar{all:unset;box-sizing:border-box;position:fixed;left:50%;transform:translateX(-50%);top:max(10px,env(safe-area-inset-top));z-index:60;display:flex;align-items:center;gap:10px;padding:10px 18px;border-radius:999px;background:var(--btn);color:var(--btn-ink);font:500 14px var(--body);cursor:pointer;box-shadow:0 8px 24px -8px rgba(0,0,0,.45)!important;white-space:nowrap}
+#updbar b{font-weight:700}#updbar span{opacity:.8}
 
 </style>
 
@@ -4038,7 +4047,7 @@ app.addEventListener('click',e=>{
    last-7-days chart, bedtime nudge, view as student, reading fonts, mystery box, fly-in
    ====================================================================== */
 /* ---- What's New: bump WHATS_VER whenever a big update ships ---- */
-const WHATS_VER='2026-10-12b',WHATS=[
+const WHATS_VER='2026-10-12c',WHATS=[
   ['Mystery box','Finish all 3 daily missions on 5 school days in a row to earn a mystery box. Some items are super rare.'],
   ['Daily mystery problem','One tricky problem a day. Solve it for bonus RP and detective badges.'],
   ['Weekly challenge','A new challenge every week with its own badge.'],
@@ -4490,6 +4499,37 @@ WHATS.unshift(['A fresh new look','Atom Math now matches Atom: new tabs at the b
 (function(){const fix=()=>{const b=app.querySelector('.back');if(b&&b.dataset.go==='home'&&/All units/.test(b.textContent)){b.removeAttribute('data-go');b.dataset.tabGo='play';b.innerHTML=AI.back+'Play'}};
   const us=unitScreen;unitScreen=function(){us.apply(this,arguments);fix()};
   const ls=lockScreen;lockScreen=function(){ls.apply(this,arguments);fix()};})();
+
+/* ---- Scrolling: the body is the scroll box, so short pages can't bounce or scroll on iPhone ---- */
+(function(){
+  const sc=()=>document.body;
+  const to=window.scrollTo.bind(window);
+  window.scrollTo=function(a,b){const y=(a&&typeof a==='object')?(a.top||0):(b||0);try{sc().scrollTop=y}catch(e){}to(0,0)};
+  try{Object.defineProperty(window,'scrollY',{configurable:true,get:()=>sc().scrollTop});Object.defineProperty(window,'pageYOffset',{configurable:true,get:()=>sc().scrollTop})}catch(e){}
+})();
+
+/* ---- Overlay safety: never leave a dim screen with nothing on it ---- */
+new MutationObserver(()=>{if(!ov.hidden&&!ov.querySelector('.ovbox'))ov.hidden=true}).observe(ov,{attributes:true,childList:true});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!ov.hidden){ov.hidden=true;ov.innerHTML=''}});
+
+/* ---- Updates: version number + "Update ready" bar ---- */
+const APP_VER='2026.10.12-4';
+function showUpdateBar(){
+  if(document.getElementById('updbar'))return;
+  const d=document.createElement('button');d.id='updbar';d.type='button';d.innerHTML='<b>Update ready</b><span>Tap to refresh</span>';
+  d.addEventListener('click',()=>location.reload());document.body.appendChild(d);
+}
+function checkUpdate(){
+  if(!/^https?:/.test(location.protocol)||!navigator.onLine)return;
+  fetch(location.pathname,{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const m=t.match(/APP_VER='([^']+)'/);if(m&&m[1]!==APP_VER)showUpdateBar()}).catch(()=>{});
+}
+setTimeout(checkUpdate,8000);setInterval(checkUpdate,20*60*1000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkUpdate()});
+(function(){const s0=settingsScreen;settingsScreen=function(){s0.apply(this,arguments);const a=app.querySelector('.card.about div');if(a)a.insertAdjacentHTML('beforeend',`<p class="fine">Version ${APP_VER} · <button class="linkb" data-act="chkupd" style="padding:0">Check for updates</button></p>`)}})();
+app.addEventListener('click',e=>{if(!e.target.closest('[data-act="chkupd"]'))return;e.stopPropagation();
+  if(!navigator.onLine)return toast("You're offline. Updates come next time you're online.");
+  fetch(location.pathname,{cache:'no-store'}).then(r=>r.text()).then(t=>{const m=t.match(/APP_VER='([^']+)'/);if(m&&m[1]!==APP_VER){showUpdateBar();toast('Update found')}else toast("You're up to date")}).catch(()=>toast("Couldn't check right now"))},true);
+WHATS.unshift(['Smoother pages','Short pages no longer scroll or bounce. There is a version number in Settings, and the app tells you when an update is ready.']);
 
 window.__G={G,gen,startRanked,genEasy,rampLevel,applyShields,parseNum,close,UNITS};
 applyLook();
