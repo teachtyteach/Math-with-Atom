@@ -29,6 +29,11 @@
    - On learnwithatom.org, each app can only unlock its own rewards.
    - On github.io test addresses it still works, but only inside that one site.
 
+   Also shared: the student's profile (name, theme, accent, font, spacing, sound),
+   the Atom streak (a day counts when the streak is kept in BOTH apps), today's 3 daily
+   missions (mixed Reading + Math), the season level (Reading words + Math answers),
+   the mystery box track, the home screen icon, and teacher mode (2 hours).
+
    KEYS below must stay APPEND-ONLY: never remove or reorder a key, only add new
    ones at the end, or students' saved rewards will shift.
 */
@@ -36,6 +41,10 @@
   var KEYS = {"read":["h~cap","h~tophat","h~cowboy","h~chef","h~souwester","h~pirate","h~wizard","h~headph","h~crown","h~bellhop","h~halo","h~pumpkin","h~leafcrown","h~earmuffs","h~flowers","h~sgh0","h~sgh1","h~sgh2","h~sgh3","h~sgc0","h~sgc1","h~sgc2","h~sgc3","h~bdayhat","h~bucket","h~viking","h~space","h~goldcrown","h~flamecrown","f~round","f~shades","f~star","f~heart","f~monocle","f~goggles","f~sandgog","f~d3","f~stache","f~sparkle","f~snorkel","f~sgf0","f~sgf1","f~sgf2","f~sgf3","f~tape","f~nerd","f~visor","f~diamond","n~bowtie","n~scarf","n~tie","n~bandana","n~vine","n~medal","n~lei","n~badge","n~vampire","n~heartbow","n~earth","n~sgn0","n~sgn1","n~sgn2","n~sgn3","n~ribbon","t~pager","t~bookworm","t~finisher","t~explorer","t~bronze","t~owl","t~bird","t~sunday","t~keeper","t~silver","t~shelf","t~hunter","t~gold","t~marathon","t~agent","t~platinum","t~warden","t~emerald","t~diamond","t~hundred","t~champ","t~t1","t~t2","t~t3","t~t4","t~tc0","t~tc1","t~tc2","t~tc3","t~trail","t~lkeeper","t~survivor","t~wander","t~caretaker","t~ta30","t~ta100","t~ta365","c~parchment","c~butter","c~mint","c~sky","c~rose","c~lavender","c~newsprint","c~sunset","c~matcha","c~bubblegum","c~midnight","c~forest","c~slate","c~coffee","c~ocean","c~grape","c~terminal","c~frontier","c~overgrown","c~noir","c~synthwave","c~season","c~autumn","c~winter","c~spring","c~summer","c~pumpkin","c~spooky","c~harvest","c~snowfall","c~fireworks","c~valentine","c~blossom","c~earthday","c~beach","c~stem","c~aurora","c~neon","c~goldleaf","c~fog","c~cosmos","c~deepsea","c~peaks","c~city","c~campfire","c~clouds","c~dunes","c~harbor","c~lodge","c~sandsea","c~reclaimed","c~plains","c~rain","c~nlake","c~cherry","c~ember","c~ringed","c~maple","c~lavender2","c~hollow","c~palms","c~lanterns","c~alley","c~pixel","c~manor","c~falls","c~glacier","c~nebula","c~bamboo","c~reef","c~savanna","c~morning","c~storm","c~castle","c~study","c~balloons","c~koi","c~sunflower","c~fsteps","c~rising","c~twist","c~final","i~gold","i~diamond","i~a-blue","i~a-green","i~a-orange","i~a-purple","i~a-pink","i~a-teal","i~fern","i~hat","i~moth","i~stag","i~flame","i~owl","i~ghost"],"math":["h~h_u1","h~h_u2","h~h_u3","h~h_u4","h~h_u5","h~h_u6","h~h_u7","h~h_u7_5","h~h_u8","h~h_u9","h~h_u10","h~grad","h~crown","h~pi","h~e_witch","h~e_acorn","h~e_beanie","h~e_hearts","h~e_bloom","h~sh1","h~sh2","h~sh3","h~sh4","t~cadet","t~recruit","t~specialist","t~veteran","t~elite","t~legend","t~champion","t~unstoppable","t~solver","t~shifter","t~hunter","t~sniper","t~breaker","t~phantom","t~operator","t~prodigy","t~architect","t~detective","t~halfway","t~fullclear","t~grandmaster","t~pilot","t~ninja","t~rocketsci","t~brainiac","t~mathlete","t~pipion","t~whiz","t~calc","t~wizard","t~nolie","t~triple","t~lucky","t~ninelives","t~halloween_m1","t~halloween_s2","t~thanksgiving_m1","t~thanksgiving_s2","t~winter_m1","t~winter_s2","t~piday_m1","t~piday_s2","t~spring_m1","t~spring_s2","t~streaker","t~flame14","t~ironwill","t~zone","t~chall1","t~chall3","t~chall6","t~crusher","t~k1","t~machine","t~sleuth","t~casecracker","t~mastermind","t~bx_cruncher","t~bx_pencil","t~bx_gains","t~bx_whisper","t~bx_prime","t~bx_golden","t~bx_hyp","t~bx_inf","t~bx_unsolv","t~qp15","t~qp25","t~qp35","t~ls15","t~ls30","t~ls50","t~rk3","t~rk6","t~rk10","t~boss1","t~boss4","t~boss10","t~dn5","t~dn20","t~ti_s1","t~ti_s2","t~ti_s3","t~ti_s4","t~ti_w3","t~ti_w9","t~ti_w15","t~ti_w21","t~ti_w27","t~ti_w33","c~sunset","c~mint","c~rose","c~matcha","c~butter","c~newsprint","c~bubblegum","c~sky","c~lavender","c~parchment","c~midnight","c~frontier","c~noir","c~terminal","c~overgrown","c~coffee","c~synthwave","c~forest","c~ocean","c~grape","c~slate","c~winter","c~spring","c~autumn","c~summer","c~season","c~falls","c~stem","c~aurora","c~valentine","c~neon","c~goldleaf","c~earthday","c~prism","c~pumpkin","c~spooky","c~witching","c~harvest","c~cider","c~cranberry","c~snowfall","c~frost","c~evergreen","c~fireworks","c~blueberry","c~midnightpi","c~blossom","c~beach","c~meadow","c~bx_bubble","c~bx_mango","c~bx_aurora","c~bx_royal","c~bx_molten","c~m_sea1","c~m_sea2","c~m_sea3","c~m_sea4","c~th_s1","c~th_s2","c~th_s3","c~th_s4","c~m_balance","c~m_mirror","c~m_rails","c~m_slope","c~m_factory","c~m_cross","c~m_trend","c~m_launch","c~m_pyramid","c~m_vault","c~m_sails","c~m_blueprint","c~m_fractal","c~m_spiral","c~m_pimoon","c~m_honey","c~m_bridge","c~m_neon","c~m_sine","c~m_lowpoly","c~m_circuit","c~m_snow","c~m_planes","c~m_observe","c~m_tangram"]};
   // Home screen icons live on the Reading site; every site uses the student's pick.
   var ICONS = {"classic":"apple-touch-icon.png","cream":"ico-cream.png","coral":"ico-coral.png","robot":"ico-robot.png","gold":"ico-gold.png","diamond":"ico-diamond.png","a-blue":"ico-a-blue.png","a-green":"ico-a-green.png","a-orange":"ico-a-orange.png","a-purple":"ico-a-purple.png","a-pink":"ico-a-pink.png","a-teal":"ico-a-teal.png","fern":"ico-fern.png","hat":"ico-hat.png","moth":"ico-moth.png","stag":"ico-stag.png","flame":"ico-flame.png","owl":"ico-owl.png","ghost":"ico-ghost.png"}, ICON_BASE = 'https://read.learnwithatom.org/';
+  var MPOOL = {"read":{"min10":"Read for 10 minutes","min20":"Read for 20 minutes","w1500":"Read 1,500 words","goal":"Hit your daily reading goal","chap":"Finish a chapter","run3":"Read 3 minutes without pausing","define":"Look up a word with Define","two":"Read from 2 different books","bm":"Bookmark a spot in a book","hear":"Hear how a word sounds"},"math":{"major":"Get 10 right on core skills","correct":"Get 15 answers right","streak":"Hit a 5-answer streak","rapid":"Score 12+ in one Quick Play","surv":"Reach 8 in one Tower Run run","units":"Practice in 2 different units","clean":"Get 8 right with no hints"}};   // daily mission text for each app: {read:{id:text}, math:{id:text}}
+  var BREAKS = [['2026-11-23', '2026-11-27'], ['2026-12-21', '2027-01-01'], ['2027-03-22', '2027-03-26']]; // no-school weeks
+  var SEASON_RATE = 200;   // 1 right answer in Math counts the same as 200 words in Reading
+  var TEACH_MS = 2 * 3600 * 1000;
   var NAME = 'atom_locker', LOCAL = 'atom_locker_copy';
   var MAX_AGE = 60 * 60 * 24 * 400; // 400 days (browser max); refreshed on every save
   var APPS = ['read', 'math'];
@@ -50,7 +59,26 @@
   function enc(a) { var s = ''; for (var i = 0; i < a.length; i += 6) { var v = 0; for (var j = 0; j < 6; j++) if (a[i + j]) v |= 1 << j; s += B64.charAt(v); } return s.replace(/A+$/, ''); }
   function bitsOr(x, y) { var a = dec(x), b = dec(y), n = Math.max(a.length, b.length), o = []; for (var i = 0; i < n; i++) o.push(a[i] || b[i] ? 1 : 0); return enc(o); }
 
-  function blank() { return { v: 2, rev: 0, b: { read: '', math: '' }, s: { read: '', math: '' }, last: '', ic: '' }; }
+  function ymd(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function kd(k) { var p = k.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function offDay(d) { var w = d.getDay(); if (w === 0 || w === 6) return true; var k = ymd(d); return BREAKS.some(function (b) { return k >= b[0] && k <= b[1]; }); }
+  function today() { return ymd(new Date()); }
+  function prevSchool(k) { var d = kd(k); do d.setDate(d.getDate() - 1); while (offDay(d)); return ymd(d); }
+  function hashDay(k) { var h = 7; for (var i = 0; i < k.length; i++) h = (h * 31 + k.charCodeAt(i)) >>> 0; return h; }
+  function missionsFor(k) {
+    var h = hashDay('atom' + k), r = Object.keys(MPOOL.read), m = Object.keys(MPOOL.math).filter(function (x) { return x !== 'major'; });
+    var r1 = r[h % r.length], second;
+    h = (h * 1103515245 + 12345) >>> 0;
+    if (h % 2) { var r2 = r.filter(function (x) { return x !== r1; }); second = { app: 'read', id: r2[(h >>> 3) % r2.length] }; }
+    else second = { app: 'math', id: m[(h >>> 3) % m.length] };
+    return [{ app: 'read', id: r1 }, { app: 'math', id: 'major' }, second].map(function (x, i) { x.slot = i; x.txt = MPOOL[x.app][x.id]; return x; });
+  }
+
+  function blank() { return { v: 2, rev: 0, b: { read: '', math: '' }, s: { read: '', math: '' }, last: '', ic: '',
+    p: { at: 0 }, t: 0, a: { d: '', r: 0, m: 0 }, k: { n: 0, l: '', b: 0 }, q: { d: '', x: 0 }, sp: { n: 0, r: 0, m: 0 }, bx: { n: 0, run: 0, l: '' } }; }
+  var num = function (v, max) { v = Math.floor(+v || 0); return Math.max(0, Math.min(max || 1e9, v)); };
+  var dstr = function (v) { return /^\d{4}-\d{2}-\d{2}$/.test(String(v || '')) ? String(v) : ''; };
+  var sstr = function (v, n) { return String(v == null ? '' : v).replace(/[^\p{L}\p{N} ._#,'-]/gu, '').slice(0, n); };
   function clean(w) {
     var o = blank();
     if (!w || typeof w !== 'object' || w.v !== 2) return o;
@@ -61,15 +89,31 @@
     });
     o.last = APPS.indexOf(w.last) > -1 ? w.last : '';
     o.ic = ICONS[w.ic] ? w.ic : '';
+    var p = w.p || {};
+    o.p = { at: num(p.at, 9e15) };
+    ['n', 'th', 'ac', 'f', 'tk'].forEach(function (k) { if (p[k] != null) o.p[k] = sstr(p[k], k === 'tk' ? 70 : 30); });
+    ['sp', 'so'].forEach(function (k) { if (p[k] != null) o.p[k] = p[k] ? 1 : 0; });
+    o.t = num(w.t, 9e15);
+    var a = w.a || {}; o.a = { d: dstr(a.d), r: a.r ? 1 : 0, m: a.m ? 1 : 0 };
+    var k = w.k || {}; o.k = { n: num(k.n, 9999), l: dstr(k.l), b: num(k.b, 9999) };
+    var q = w.q || {}; o.q = { d: dstr(q.d), x: num(q.x, 7) };
+    var sp = w.sp || {}; o.sp = { n: num(sp.n, 999), r: num(sp.r), m: num(sp.m) };
+    var bx = w.bx || {}; o.bx = { n: num(bx.n, 99), run: num(bx.run, 9999), l: dstr(bx.l) };
     return o;
   }
   function merge(a, b) {
     var m = clean(a.rev >= b.rev ? a : b), other = a.rev >= b.rev ? b : a;
     APPS.forEach(function (x) { m.b[x] = bitsOr(m.b[x], other.b[x]); });
+    if (m.a.d === other.a.d) { m.a.r |= other.a.r; m.a.m |= other.a.m; } else if (other.a.d > m.a.d) m.a = other.a;
+    if (m.q.d === other.q.d) m.q.x |= other.q.x; else if (other.q.d > m.q.d) m.q = other.q;
+    if (other.k.l > m.k.l || (other.k.l === m.k.l && other.k.n > m.k.n)) m.k = other.k;
+    m.k.b = Math.max(m.k.b, other.k.b, m.k.n);
+    if (m.sp.n === other.sp.n) { m.sp.r = Math.max(m.sp.r, other.sp.r); m.sp.m = Math.max(m.sp.m, other.sp.m); } else if (other.sp.n > m.sp.n) m.sp = other.sp;
+    if (other.p.at > m.p.at) m.p = other.p;
     m.rev = Math.max(a.rev, b.rev);
     return m;
   }
-  function sameBits(a, b) { return a.b.read === b.b.read && a.b.math === b.b.math; }
+  function sameBits(a, b) { return JSON.stringify([a.b, a.a, a.q, a.k, a.sp]) === JSON.stringify([b.b, b.a, b.q, b.k, b.sp]); }
 
   function readCookie() {
     var parts = document.cookie ? document.cookie.split('; ') : [];
@@ -165,6 +209,100 @@
         if (l.getAttribute('href') !== u) { l.removeAttribute('type'); l.href = u; }
       });
       return u;
+    },
+
+    /* ---------- one profile ---------- */
+    profile: function () { return get().p; },
+    // Merge changed fields in; anyone can change the profile.
+    setProfile: function (part) {
+      var w = get(), p = Object.assign({}, w.p), ch = false;
+      Object.keys(part || {}).forEach(function (k) { if (k === 'at') return; var v = part[k]; if (v === undefined) return; if (p[k] !== v) { p[k] = v; ch = true; } });
+      if (!ch) return false; p.at = Date.now(); w.p = clean({ v: 2, p: p }).p; write(w); return true;
+    },
+
+    /* ---------- one teacher mode (lasts 2 hours, like Atom Math) ---------- */
+    teacher: function () { return get().t > Date.now(); },
+    setTeacher: function (on) { var w = get(), t = on ? Date.now() + TEACH_MS : 0; if (!on && !w.t) return; w.t = t; write(w); },
+
+    /* ---------- Atom streak: a school day counts when the streak is kept in BOTH apps ---------- */
+    today: today, offDay: function (k) { return offDay(kd(k)); }, prevSchool: prevSchool,
+    markActive: function (app) {
+      if (!canUnlock(app)) return null;
+      var w = get(), t = today(), ch = false;
+      if (w.a.d !== t) { w.a = { d: t, r: 0, m: 0 }; ch = true; }
+      var f = app === 'read' ? 'r' : 'm';
+      if (!w.a[f]) { w.a[f] = 1; ch = true; }
+      var grew = false;
+      if (w.a.r && w.a.m && w.k.l !== t) { w.k.n = w.k.l && w.k.l === prevSchool(t) ? w.k.n + 1 : 1; w.k.l = t; w.k.b = Math.max(w.k.b, w.k.n); grew = true; ch = true; }
+      if (ch) write(w);
+      return grew ? w.k.n : null;
+    },
+    streak: function () {
+      var w = get(), t = today(), alive = w.k.l && (w.k.l === t || w.k.l === prevSchool(t));
+      var a = w.a.d === t ? w.a : { r: 0, m: 0 };
+      return { n: alive ? w.k.n : 0, best: Math.max(w.k.b, w.k.n), today: w.k.l === t, read: !!a.r, math: !!a.m };
+    },
+
+    /* ---------- daily missions: 3 a day, mixed Reading + Math, same everywhere ---------- */
+    missions: function () {
+      var w = get(), t = today(), x = w.q.d === t ? w.q.x : 0;
+      return missionsFor(t).map(function (m) { m.done = !!(x & (1 << m.slot)); return m; });
+    },
+    // Mark one of this app's missions done. Returns {all, box} so the app can celebrate.
+    missionDone: function (app, slot) {
+      if (!canUnlock(app)) return null;
+      var w = get(), t = today(), ms = missionsFor(t);
+      if (!ms[slot] || ms[slot].app !== app) return null;
+      if (w.q.d !== t) w.q = { d: t, x: 0 };
+      if (w.q.x & (1 << slot)) return null;
+      w.q.x |= 1 << slot;
+      var all = w.q.x === 7, box = false;
+      if (all && w.bx.l !== t) {
+        w.bx.run = w.bx.l && w.bx.l === prevSchool(t) ? w.bx.run + 1 : 1; w.bx.l = t;
+        if (w.bx.run % 5 === 0) { w.bx.n = Math.min(99, w.bx.n + 1); box = true; }
+      }
+      write(w);
+      return { all: all, box: box };
+    },
+
+    /* ---------- one mystery box track ---------- */
+    boxes: function () { return get().bx.n; },
+    boxRun: function () { var w = get(), t = today(); return w.bx.l && (w.bx.l === t || w.bx.l === prevSchool(t)) ? w.bx.run % 5 : 0; },
+    useBox: function () { var w = get(); if (w.bx.n < 1) return false; w.bx.n--; write(w); return true; },
+    addBoxes: function (n) { n = num(n, 99); if (!n) return; var w = get(); w.bx.n = Math.min(99, w.bx.n + n); write(w); },
+
+    /* ---------- one season level: Reading words + Math answers ---------- */
+    seasonRate: SEASON_RATE,
+    setSeason: function (app, n, raw) {
+      if (!canUnlock(app)) return;
+      var w = get(), f = app === 'read' ? 'r' : 'm'; raw = num(raw);
+      if (w.sp.n !== n) { if (n < w.sp.n) return; w.sp = { n: n, r: 0, m: 0 }; }
+      if (w.sp[f] >= raw) return;
+      w.sp[f] = raw; write(w);
+    },
+    seasonOther: function (app, n) { var w = get(); if (w.sp.n !== n) return 0; return app === 'read' ? w.sp.m : w.sp.r; },
+    seasonLevel: function (n) { var w = get(); if (w.sp.n !== n) return 1; return Math.min(100, 1 + Math.floor((w.sp.r + w.sp.m * SEASON_RATE) / 3000)); },
+
+    /* ---------- the Reading / Math switch shown in both apps ---------- */
+    switcher: function (cur) {
+      if (!document.getElementById('atomswCss')) {
+        var st = document.createElement('style'); st.id = 'atomswCss';
+        st.textContent = 'nav.atomsw{height:auto!important;min-height:0!important;line-height:1!important;box-sizing:border-box}.atomsw .asw{min-height:0!important;height:30px!important;box-sizing:border-box;line-height:1!important}.atomsw{display:inline-flex;gap:2px;padding:3px;border-radius:999px;background:color-mix(in srgb,var(--ink) 7%,transparent);border:1px solid color-mix(in srgb,var(--line) 80%,transparent);flex:none;align-self:center;margin:0 6px}' +
+          '.atomsw .asw{display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border-radius:999px;font:600 12.5px/1 system-ui,sans-serif;color:var(--muted);text-decoration:none;white-space:nowrap}' +
+          '.atomsw .asw.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.14)}.atomsw .asw svg{width:15px;height:15px;flex:none}' +
+          '.atomsw a.asw:focus-visible{outline:2px solid var(--accent);outline-offset:2px}@media (max-width:640px){.atomsw .asw{padding:7px 9px}.atomsw .asw span{display:none}.atomsw .asw svg{width:17px;height:17px}}';
+        document.head.appendChild(st);
+      }
+      var nav = document.createElement('nav'); nav.className = 'atomsw'; nav.setAttribute('aria-label', 'Atom apps');
+      var IC = { read: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 5.5C5 4 8.5 4 12 6c3.5-2 7-2 9.5-.5V19c-2.5-1.5-6-1.5-9.5.5-3.5-2-7-2-9.5-.5zM12 6v13.5"/></svg>',
+                 math: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6.5 3.5v6M3.5 6.5h6M14.5 6.5h6M4 15l5 5M9 15l-5 5M14.5 15.5h6M14.5 19.5h6"/></svg>' };
+      [['read', 'Reading', 'https://read.learnwithatom.org/'], ['math', 'Math', 'https://math.learnwithatom.org/']].forEach(function (x) {
+        var on = x[0] === cur, el = document.createElement(on ? 'span' : 'a');
+        el.className = 'asw' + (on ? ' on' : ''); el.innerHTML = IC[x[0]] + '<span>' + x[1] + '</span>'; el.title = 'Atom ' + x[1]; el.setAttribute('aria-label', 'Atom ' + x[1]);
+        if (on) el.setAttribute('aria-current', 'page'); else el.href = x[2];
+        nav.appendChild(el);
+      });
+      return nav;
     },
 
     exportData: function () { return get(); },
@@ -3337,7 +3475,7 @@ function backupScreen(msg){
     <div class="actions" style="justify-content:flex-start"><button class="btn small" data-act="bkfile">Download save file</button><button class="btn ghost small" data-act="bkcopy">Copy save code</button></div>
     <textarea id="bkcode" class="bkcode" readonly hidden></textarea></div>
   <div class="bk"><div class="ltag">Load</div>
-    <label for="bkfilein" class="ts">Open a save file</label><input id="bkfilein" type="file" accept=".launchpad,.json,.txt">
+    <label for="bkfilein" class="ts">Open a save file</label><input id="bkfilein" type="file" accept=".Atom,.atom,.launchpad,.json,.txt">
     <label for="bkpaste" class="ts">Or paste a save code</label><textarea id="bkpaste" class="bkcode" placeholder="LPM1:…"></textarea>
     <div class="actions" style="justify-content:flex-start"><button class="btn ghost small" data-act="bkload">Load progress</button></div>
     <div id="bkmsg" class="ts">${msg||''}</div></div>${foot}`;
@@ -3494,8 +3632,8 @@ function teacherScreen(msg){
   :`<p class="lede">For demos. Opens every unit, Locker look, and unit test on this device. Student progress is not changed.</p>
     <form class="tform" id="tmform" autocomplete="off"><label for="tmpw">Teacher password</label><div class="trowf"><input id="tmpw" type="password" placeholder="Password"><button class="btn small" type="submit">Turn on</button></div><div class="ts" id="tmmsg">${msg||''}</div></form>`}${foot}`;
   const f=document.getElementById('tmform');
-  if(f)f.addEventListener('submit',e=>{e.preventDefault();if(document.getElementById('tmpw').value===TEACHER_PW){S.teacher=true;S.teacherAt=Date.now();save();toast('Teacher mode on','up');teacherScreen()}
-    else{document.getElementById('tmmsg').textContent='That password is not right.';document.getElementById('tmpw').select()}});
+  if(f)f.addEventListener('submit',e=>{e.preventDefault();const v=document.getElementById('tmpw').value;(window.atomPwOK?window.atomPwOK(v):Promise.resolve(v===TEACHER_PW)).then(ok=>{if(ok){S.teacher=true;S.teacherAt=Date.now();delete S.tmpTeach;save();try{AtomLocker.setTeacher(true)}catch(x){}toast('Teacher mode on for all Atom apps','up');teacherScreen()}
+    else{document.getElementById('tmmsg').textContent='That password is not right.';document.getElementById('tmpw').select()}})});
   window.scrollTo(0,0);
 }
 S.opened=S.opened||{};
@@ -3778,7 +3916,7 @@ app.addEventListener('click',e=>{
   if(b.dataset.act==='mnext'){mistNext();return}
   if(b.dataset.act==='backup'){backupScreen();return}
   if(b.dataset.act==='teacher'){teacherScreen();return}
-  if(b.dataset.act==='toff'){S.teacher=false;save();toast('Teacher mode off','');home();return}
+  if(b.dataset.act==='toff'){S.teacher=false;delete S.tmpTeach;save();try{AtomLocker.setTeacher(false)}catch(x){}toast('Teacher mode off','');home();return}
   if(b.dataset.act==='tdemo-rank'){st.newUnlocks=['Color: Gold Rush','Title: Veteran'];showCeleb();return}
   if(b.dataset.act==='tdemo-master'){showMaster();return}
   if(b.dataset.act==='bkfile'){bkFile();return}
@@ -4642,7 +4780,7 @@ app.addEventListener('click',e=>{
    last-7-days chart, bedtime nudge, view as student, reading fonts, mystery box, fly-in
    ====================================================================== */
 /* ---- What's New: bump WHATS_VER whenever a big update ships ---- */
-const WHATS_VER='2026-10-13b',WHATS=[
+const WHATS_VER='2026-10-13c',WHATS=[
   ['Mystery box','Finish all 3 daily missions on 5 school days in a row to earn a mystery box. Some items are super rare.'],
   ['Daily mystery problem','One tricky problem a day. Solve it for bonus RP and detective badges.'],
   ['Weekly challenge','A new challenge every week with its own badge.'],
@@ -5062,7 +5200,7 @@ home=function(){
     ${S.boxes>0?rowBtn({cls:'gold',icon:BOXSVG,icls:'gold',t:'You earned a mystery box!',s:'Tap to open',attr:'data-act="openbox"'}):''}
     ${rowBtn({icon:AI.flame,icls:'fl',t:'Daily warm-up',s:wd?`Done · ${ds}-day streak`:'3 quick problems. Keeps your streak.',attr:'data-act="warm"',end:wd?`<span class="okc">${AI.check}</span>`:AI.chev})}
     <button class="lrow" data-act="tmis" aria-expanded="${!!st.misOpen}"><span class="lic">${AI.trophy}</span><span class="lbody"><b>Daily missions</b><span>${done===3?'All done today':`${done} of 3 done`}</span></span><span class="lend">${done===3?`<span class="okc">${AI.check}</span>`:`<span class="cnt">${done}/3</span>`}${AI.down}</span></button>
-    <div class="mlist"${st.misOpen?'':' hidden'}>${ms.map(m=>{const v=Math.min(m.val(d),m.goal),dn=d.done.includes(m.id);return `<div class="mi${dn?' done':''}"><span>${dn?AI.check:''}</span><span class="mit">${m.txt}${pbar(100*v/m.goal)}</span><b>${dn?'Done':`${v}/${m.goal}`}</b></div>`}).join('')}
+    <div class="mlist"${st.misOpen?'':' hidden'}>${window.atomStkHTML?atomStkHTML():''}${ms.map(m=>{if(m.other){const dn=!!m.val(d);return `<div class="mi other${dn?' done':''}"><span>${dn?AI.check:''}</span><span class="mit">${m.txt}${dn?'':'<a class="mgo" href="https://read.learnwithatom.org/">Open Atom Reading ›</a>'}</span><b>${dn?'Done':'Reading'}</b></div>`}const v=Math.min(m.val(d),m.goal),dn=d.done.includes(m.id);return `<div class="mi${dn?' done':''}"><span>${dn?AI.check:''}</span><span class="mit">${m.txt}${pbar(100*v/m.goal)}</span><b>${dn?'Done':`${v}/${m.goal}`}</b></div>`}).join('')}
       <div class="mi"><span>${wk.done?AI.check:''}</span><span class="mit">Weekly · ${wk.c.txt}${pbar(100*wk.v/wk.c.goal)}</span><b>${wk.done?'Badge':wk.v+'/'+wk.c.goal}</b></div>
       <div class="mi"><span class="bx">${BOXSVG}</span><span class="mit">Mystery box · all 3 missions, 5 school days in a row${pbar(100*(S.boxProg||0)/5,'#d99a00')}</span><b>${S.boxProg||0}/5</b></div></div>
     ${rowBtn({icon:AI.q,icls:'q',t:'Mystery problem',s:ms2==='win'?'Solved. New one tomorrow.':ms2==='miss'?'New one tomorrow.':"One try. Same problem for the whole class.",attr:'data-act="mystery"',end:ms2==='win'?`<span class="okc">${AI.check}</span>`:AI.chev})}
@@ -5805,7 +5943,7 @@ const SEA_NAMES=['First Steps','Rising Slope','Turning Point','Final Answer'],SE
 function seasonN(n){const first=new Date(2026,8+(n-1)*3,1),last=new Date(2026,8+n*3,0);return{n,idx:(n-1)%4,name:SEA_NAMES[(n-1)%4],a:ymd(first),b:ymd(last),last}}
 function seasonAt(d){const mo=(d.getFullYear()-2026)*12+(d.getMonth()-8);return seasonN(Math.max(1,Math.floor(mo/3)+1))}
 const seaNow=()=>seasonAt(new Date());
-const seaXP=se=>daysSum(se.a,se.b);
+let seaXP=se=>daysSum(se.a,se.b);
 const seaLevel=xp=>Math.min(SEA_MAX,1+Math.floor(xp/SEA_STEP));
 const seaNeed=lv=>(lv-1)*SEA_STEP;
 const seaBest=idx=>{let b=0;for(const n in S.sr)if((n-1)%4===idx)b=Math.max(b,S.sr[n]);return b};
@@ -7014,6 +7152,139 @@ body.rwopen .rw .rwpv{position:sticky;top:8px;z-index:5}
   window.__rw={openSheet,closeSheet};
 })();
 WHATS.unshift(['A new Rewards look','Rewards now looks like Atom Reading. Tap a group like Looks or Atom, then tap any item to use it. Your preview at the top changes as you go.']);
+
+/* ===================== One Atom: profile, app switch, Atom streak, daily missions, season, boxes, teacher, backup =====================
+   Everything here is shared with Atom Reading and learnwithatom.org through the Atom Locker. */
+(function(){
+  const L=window.AtomLocker;if(!L||!L.missions)return;
+  const READ_URL='https://read.learnwithatom.org/',HOME_URL='https://learnwithatom.org/';
+
+  /* ---------- 1. one profile ---------- */
+  const thToShared=id=>id==='meadow'?'m_meadow':id, thFromShared=id=>id==='m_meadow'?'meadow':(id==='meadow'?null:id);
+  const acToShared=id=>!id||id==='theme'?'':(/^a_/.test(id)?id.slice(2):null), acFromShared=id=>id?'a_'+id:'theme';
+  const tokens=()=>{try{const c=getComputedStyle(document.documentElement),v=k=>c.getPropertyValue(k).trim();return ['--bg','--surface','--ink','--muted','--line','--accent'].map(v).join(',')+','+(document.documentElement.dataset.scheme==='dark'?1:0)}catch(e){return ''}};
+  const mine=()=>{const o={n:S.name||'',th:thToShared(S.look.theme||'auto'),f:['lexend','dyslexic'].includes(S.pref.font)?S.pref.font:'',sp:S.pref.space?1:0,so:S.sound?1:0,tk:tokens()};const a=acToShared(S.look.accent);if(a!==null)o.ac=a;return o};
+  let last='',applying=false;
+  function pushProfile(){if(applying||S.teacher)return;const m=mine(),k=JSON.stringify(m);if(k===last)return;last=k;if(L.setProfile(m)){S.pAt=L.profile().at;save()}}
+  function takeProfile(){
+    const p=L.profile();if(!p.at||p.at<=(S.pAt||0))return false;
+    applying=true;
+    try{
+      if(p.n)S.name=p.n;
+      if(p.th){const t=thFromShared(p.th);if(t&&(t==='auto'||themeUsable(t)))S.look.theme=t}
+      if(p.ac!==undefined){const a=acFromShared(p.ac),it=LOCKER.accent.items.find(i=>i[0]===a);if(it&&unlocked(it))S.look.accent=a}
+      if(p.f!==undefined)S.pref.font=p.f||'default';
+      if(p.sp!==undefined)S.pref.space=!!p.sp;
+      if(p.so!==undefined)S.sound=!!p.so;
+      S.pAt=p.at;save();applyLook();try{applyFont()}catch(e){}
+    }finally{applying=false}
+    last=JSON.stringify(mine());return true;
+  }
+  if(!takeProfile())setTimeout(pushProfile,900);
+  setInterval(pushProfile,2500);
+
+  /* ---------- 2. switch between apps ---------- */
+  function addSwitch(){
+    const br=app.querySelector('header.ahead.home .abrand');if(!br||br.nextElementSibling&&br.nextElementSibling.classList.contains('atomsw'))return;
+    br.after(L.switcher('math'));br.style.cursor='pointer';br.title='All Atom apps';br.addEventListener('click',()=>{location.href=HOME_URL});
+  }
+  {const h0=home;home=function(){h0.apply(this,arguments);try{addSwitch()}catch(e){}}}
+
+  /* ---------- 3. Atom streak: keep your streak in Math AND Reading on the same school day ---------- */
+  function markDay(){if(S.teacher)return;if((S.warmDays||{})[today()]){const n=L.markActive('math');if(n)setTimeout(()=>toast(`Atom streak: ${n} ${n===1?'day':'days'}! You kept your streak in Math and Reading today.`,'up'),900)}}
+
+  /* ---------- 4. daily missions: 3 a day, mixed Reading + Math ---------- */
+  const SLOT=()=>L.missions();
+  todaysMissions=function(){return SLOT().map(m=>m.app==='math'?(MISSIONS.find(x=>x.id===m.id)||MISSIONS[0]):{id:'r_'+m.id,txt:m.txt,goal:1,val:()=>L.missions()[m.slot].done?1:0,other:true,slot:m.slot})};
+  checkMissions=function(){
+    const d=D();
+    for(const m of SLOT()){
+      if(m.app==='math'){const M=MISSIONS.find(x=>x.id===m.id);if(!M)continue;
+        if(!d.done.includes(M.id)&&M.val(d)>=M.goal){d.done.push(M.id);seasonNote(M.id);const g=applyRP(missionRP(M),null);toast(`${cheer()} Mission complete${g?' · '+signed(g)+' RP':''}`,'up');sfx('mission')}
+        if(d.done.includes(M.id)&&!m.done){const r=L.missionDone('math',m.slot);if(r&&r.box)setTimeout(()=>{toast('You earned a mystery box!','up');sfx('rank')},700)}}
+      else if(m.done&&!d.done.includes('r_'+m.id))d.done.push('r_'+m.id);
+    }
+    if(SLOT().every(m=>m.done)&&!d.allDone){d.allDone=true;S.stats.missionDays++}
+    save();checkBadges();
+  };
+  boxDay=function(){}; // the shared box track lives in the Atom Locker now
+  window.atomStkHTML=()=>{const s=L.streak();return `<div class="atomstk"><span class="fl" aria-hidden="true">🔥</span><span><b>Atom streak: ${s.n} ${s.n===1?'day':'days'}</b><span class="ts">${s.today?'Done for today. See you next school day!':`Today: Math ${s.math?'✓':'–'} · Reading ${s.read?'✓':'–'}. Keep your streak in both.`}</span></span></div>`};
+  missionsCard=function(){
+    const d=D(),ms=todaysMissions(),s=L.streak(),done=SLOT().filter(m=>m.done).length;
+    return `<div class="missions"><div class="mhead"><span class="pltitle">Daily missions</span><span class="ts">${done}/3 done · New missions at midnight</span></div>
+    <div class="atomstk"><span class="fl" aria-hidden="true">🔥</span><span><b>Atom streak: ${s.n} ${s.n===1?'day':'days'}</b><span class="ts">${s.today?'Done for today. See you next school day!':`Today: Math ${s.math?'✓':'–'} · Reading ${s.read?'✓':'–'}. Keep your streak in both.`}</span></span></div>
+    ${ms.map(m=>{if(m.other){const dn=!!m.val(d);return `<div class="mrow other${dn?' done':''}"><span class="mcheck">${dn?ICON.check:''}</span><span class="mtxt">${m.txt}${dn?'':`<a class="mgo" href="${READ_URL}">Open Atom Reading ›</a>`}</span><span class="mrp">${dn?'Done':'Reading'}</span></div>`}
+      const v=Math.min(m.val(d),m.goal),dn=d.done.includes(m.id);return `<div class="mrow${dn?' done':''}"><span class="mcheck">${dn?ICON.check:''}</span>
+      <span class="mtxt">${m.txt}<span class="mbar"><i style="width:${Math.round(100*v/m.goal)}%"></i></span></span><span class="mrp">${dn?'Done':`${v}/${m.goal}`}</span></div>`}).join('')}</div>`;
+  };
+  {const st=document.createElement('style');st.textContent=`.mrow.other .mtxt,.mi.other .mit{display:grid;gap:2px}.mrow.other{border-style:dashed}.mi.other b{font-size:12px;color:var(--muted)}.mgo{font-size:12.5px;font-weight:600;color:var(--accent);text-decoration:none}
+.atomstk{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;background:color-mix(in srgb,#f08a24 12%,var(--surface));border:1px solid color-mix(in srgb,#f08a24 35%,var(--line));margin:6px 0 8px}
+.atomstk .fl{font-size:22px}.atomstk b{display:block;font-family:var(--display,Georgia,serif);font-size:15px}`;document.head.appendChild(st)}
+
+  /* ---------- 5. one season level: Math right answers + Reading words ---------- */
+  const sx0=seaXP;
+  seaXP=se=>sx0(se)+Math.floor(L.seasonOther('math',se.n)/L.seasonRate);
+  function pushSeason(){try{const se=seaNow();L.setSeason('math',se.n,sx0(se))}catch(e){}}
+
+  /* ---------- 6. one mystery box track ---------- */
+  if(!S.boxMig){if(S.boxes>0)L.addBoxes(S.boxes);S.boxMig=1;save()}
+  const syncBoxes=()=>{S.boxes=L.boxes();S.boxProg=L.boxRun()};syncBoxes();
+  {const ob0=openBox;openBox=function(){syncBoxes();const before=S.boxes;ob0.apply(this,arguments);if(S.boxes<before)L.useBox();syncBoxes();save()}}
+
+  /* ---------- 7. one teacher mode ---------- */
+  const READ_PW='2a0e2789c7e50a2fd0141e007182e4e4b3ba4d67912cbffe197c2343a88ae2a5';
+  window.atomPwOK=async v=>{if(v===TEACHER_PW)return true;try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('wordsmith:'+v));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')===READ_PW}catch(e){return false}};
+  function syncTeacher(){
+    const on=L.teacher();
+    if(on&&!S.teacher){S.teacher=true;S.teacherAt=Date.now();S.tmpTeach=1;save();toast('Teacher mode is on for all Atom apps','up');if(st.screen==='home')home()}
+    else if(!on&&S.teacher&&S.tmpTeach){S.teacher=false;delete S.tmpTeach;save();if(st.screen==='home')home()}
+  }
+
+  /* ---------- 8. one backup for both apps ---------- */
+  function askOther(msg,ms){return new Promise(res=>{
+    if(!L.isShared)return res(null);
+    const f=document.createElement('iframe');f.src=READ_URL+'?bridge=1';f.style.cssText='position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;border:0;left:-9px;top:-9px';f.setAttribute('aria-hidden','true');f.tabIndex=-1;
+    let done=false;const fin=v=>{if(done)return;done=true;window.removeEventListener('message',on);setTimeout(()=>f.remove(),50);res(v)};
+    const on=e=>{if(e.source!==f.contentWindow||!/^https:\/\/read\.learnwithatom\.org$/.test(e.origin))return;const d=e.data||{};if(d.atom==='ready')f.contentWindow.postMessage(msg,e.origin);else if(d.atom==='reply')fin(d)};
+    window.addEventListener('message',on);setTimeout(()=>fin(null),msg.atom==='export'?25000:20000);document.body.appendChild(f)})}
+  bkFile=async function(){
+    const name=bkName(),m=document.getElementById('bkmsg');if(m)m.textContent='Getting your Reading progress too…';
+    const other=await askOther({atom:'export'});S.lastBackup=today();save();
+    const both=other&&other.data;const data=both?JSON.stringify(Object.assign({},other.data,{atomAll:1,math:S,locker:L.exportData()})):JSON.stringify(S);
+    const fn=both?`${name}.Atom`:`${name}.launchpad`;
+    try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download=fn;document.body.appendChild(a);a.click();a.remove();
+      if(m)m.textContent=both?`Saved ${fn}. It has your Math and Reading progress. Restore it in either app.`:`Saved ${fn}. If nothing downloaded, use Copy save code instead.`}catch(e){bkCopy()}
+  };
+  const bl0=bkLoad;
+  bkLoad=async function(){
+    const m=document.getElementById('bkmsg');let o=null;try{o=JSON.parse(document.getElementById('bkpaste').value)}catch(e){}
+    if(o&&o.format==='pace-backup'){
+      if(o.math&&o.math.topics){S=Object.assign({topics:{},days:{}},o.math);migrateUnits();ensureS();save();applyLook()}
+      if(o.locker)L.importData(o.locker);
+      if(m)m.textContent='Loading your Reading progress too…';
+      const r=await askOther({atom:'import',data:o});
+      home();toast(o.math?(r&&r.ok?'Math and Reading restored':'Math restored. Open Atom Reading and restore there too.'):(r&&r.ok?'Reading restored':'Open Atom Reading to load this file'),'up');return;
+    }
+    return bl0.apply(this,arguments);
+  };
+  // When this app is the hidden copy inside Atom Reading, answer its requests.
+  if(window.parent!==window&&/bridge=1/.test(location.search)){
+    const ok=o=>/^https:\/\/(read\.)?learnwithatom\.org$/.test(o);
+    window.addEventListener('message',e=>{
+      if(!ok(e.origin))return;const d=e.data||{};
+      if(d.atom==='export')e.source.postMessage({atom:'reply',data:JSON.parse(JSON.stringify(S))},e.origin);
+      if(d.atom==='import'){let okk=false;try{if(d.data&&d.data.topics){S=Object.assign({topics:{},days:{}},d.data);migrateUnits();ensureS();save();okk=true}}catch(x){}e.source.postMessage({atom:'reply',ok:okk},e.origin)}
+    });
+    setTimeout(()=>window.parent.postMessage({atom:'ready'},'*'),300);
+  }
+
+  /* ---------- keep everything in step ---------- */
+  function tick(){try{markDay();pushSeason();checkMissions();syncTeacher();syncBoxes()}catch(e){}}
+  setTimeout(tick,1200);setInterval(tick,20000);
+  {let lastW='';L.onChange(w=>{const k=JSON.stringify([w.q,w.k,w.a,w.sp,w.bx,w.t,w.p.at]);if(k===lastW)return;lastW=k;
+    try{takeProfile();syncTeacher();syncBoxes();seaSync(true);if(st.screen==='home'){const y=window.scrollY;home();window.scrollTo(0,y)}}catch(e){}})}
+  WHATS.unshift(['One Atom','Reading and Math now share more: your name and look, one Atom streak (keep your streak in both on the same day), daily missions from both apps, one season level, one mystery box track and one backup file.']);
+})();
 
 window.__G={G,gen,startRanked,genEasy,rampLevel,applyShields,parseNum,close,UNITS};
 applyLook();
