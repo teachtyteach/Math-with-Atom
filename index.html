@@ -1108,8 +1108,6 @@ body[data-screen="practice"] #app .rankcard,body[data-screen="practice"] #app .f
 .rcard span{font-size:12px;line-height:1.3}
 .rcards{gap:8px}
 /* body is the scroll box: no page bounce when nothing to scroll */
-html{height:100%;overflow:hidden}
-body{height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior-y:none;-webkit-overflow-scrolling:touch}
 @media print{html,body{height:auto!important;overflow:visible!important}}
 /* sturdier overlay on phones */
 #overlay:not([hidden]){display:flex!important;align-items:center;justify-content:center}
@@ -1117,8 +1115,6 @@ body{height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior-y:none;-w
 #updbar{all:unset;box-sizing:border-box;position:fixed;left:50%;transform:translateX(-50%);top:max(10px,env(safe-area-inset-top));z-index:60;display:flex;align-items:center;gap:10px;padding:10px 18px;border-radius:999px;background:var(--btn);color:var(--btn-ink);font:500 14px var(--body);cursor:pointer;box-shadow:0 8px 24px -8px rgba(0,0,0,.45)!important;white-space:nowrap}
 #updbar b{font-weight:700}#updbar span{opacity:.8}
 /* iPhone: size the scroll box to the part of the screen you can actually see */
-html{height:100%;height:100dvh}
-body{height:100%;height:100dvh}
 #app{padding-bottom:calc(40px + env(safe-area-inset-bottom))}
 body[data-tab]:not([data-tab=""]) #app{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
 /* settings tabs (Atom style) */
@@ -1148,6 +1144,29 @@ body.still .flyin{display:none!important}
 .stabs button[aria-selected=true]{background:var(--btn);color:var(--btn-ink)}
 #app .card>.tool:first-child{border-top:0;padding-top:0}
 #app .seg button{padding:7px 12px}
+/* round 4 */
+.mastered{text-align:center;display:grid!important;justify-items:center;gap:6px;padding:26px 18px!important;position:relative;overflow:hidden}
+.mastered .mbot{width:96px}
+.mastered .mcheck2{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--good);color:#fff;margin-top:-30px;margin-left:70px;border:3px solid var(--surface)}
+.mastered .mcheck2 svg{width:24px;height:24px}
+.mastered h1{font-size:26px!important}
+.mactions{display:grid;gap:10px}
+.mactions .btn{width:100%}
+.mastnote{margin-top:8px;padding:8px 12px;border-radius:12px;background:color-mix(in srgb,var(--good) 14%,var(--surface));color:var(--good);font:700 14px var(--body);text-align:center}
+.mchip2{display:inline-block;margin:0 0 6px;padding:3px 10px;border-radius:999px;background:color-mix(in srgb,var(--good) 14%,var(--surface));color:var(--good);font:700 12px var(--body)}
+.mbrow{display:grid;justify-items:center;gap:6px}
+.mbrow .pair{font:600 22px var(--display);display:flex;align-items:center;gap:6px}
+.mbrow input{width:72px!important;text-align:center}
+.mbhint{text-align:center}
+.card.alldone{display:flex!important;align-items:center;gap:14px;background:color-mix(in srgb,var(--good) 8%,var(--surface))!important;border-color:color-mix(in srgb,var(--good) 40%,var(--line))!important}
+.card.alldone b{font:600 18px var(--display)}
+.bragline{margin-top:10px;font-size:15px}
+.rkl{display:grid;gap:10px}
+#app .rkn{border:1px solid var(--line);border-radius:18px;background:var(--surface);padding:10px 12px}
+#app .rkn.lock{opacity:.55;border-style:dashed}
+#app .rkn.next{border-color:var(--accent)}
+#app .card:has(.mchip2) .mchip.done{display:none}
+.mastered .mrp{margin:2px 0 0;font:700 15px var(--body);color:var(--good)}
 
 </style>
 
@@ -1298,7 +1317,7 @@ G.dilate=()=>{const k=pick([2,3,0.5]),n=ptName();let x=rnz(-4,4),y=rnz(-4,4);if(
   const ks=k===0.5?'½':k;return{type:'pair',ask:`Dilate ${n}(${N(x)}, ${N(y)}) by a scale factor of ${ks}, centered at the origin. Where is ${n}′?`,vis:plane([{x,y,label:n}]),a:[k*x,k*y],
     hint:`Multiply both coordinates by ${ks}.`,steps:[`(${N(x)} × ${ks}, ${N(y)} × ${ks})`,`${n}′(${N(k*x)}, ${N(k*y)})`]}};
 G.similar=()=>{const w=ri(2,8),h=ri(2,9),k=pick([2,3,4,1.5]);if(k===1.5&&(w%2||h%2))return null;const W=w*k,H=h*k,shape=pick(['rectangle','triangle']);
-  if(shape==='rectangle')return{ask:`Two rectangles are similar. The small one is ${w} cm by ${h} cm. The large one is ${W} cm wide. How tall is the large rectangle (in cm)?`,a:H,
+  if(shape==='rectangle')return{ask:`Two rectangles are similar. The small one is ${h} cm long by ${w} cm wide. The large one is ${W} cm wide. How long is the large rectangle (in cm)?`,a:H,
     hint:`Find the scale factor: ${W} ÷ ${w}.`,steps:[`Scale factor = ${W} ÷ ${w} = ${k}`,`Height = ${h} × ${k} = ${H} cm`]};
   return{ask:`Triangle ABC is similar to triangle DEF. AB = ${w}, BC = ${h}, and DE = ${W}. What is EF?`,a:H,hint:`Matching sides are in the same ratio. Compare DE to AB.`,steps:[`Scale factor = ${W} ÷ ${w} = ${k}`,`EF = ${h} × ${k} = ${H}`]}};
 
@@ -1319,7 +1338,7 @@ G.angleAlg=()=>{const x=ri(6,20),a=ri(1,4),b=ri(1,4),c=ri(1,3),K=180-(a+b+c)*x,k
 
 /* Unit 4 */
 G.slopeTable=()=>{const m=rnz(-5,5),b=rnz(-10,10),s=pick([1,2]),x0=ri(-3,2),xs=[0,1,2,3].map(i=>x0+i*s),ys=xs.map(x=>m*x+b);
-  return{ask:'What is the slope (rate of change) of this table?',vis:xyTable(xs,ys),a:m,hint:'Slope = change in y ÷ change in x.',steps:[`Δy = ${N(ys[1]-ys[0])}, Δx = ${s}`,`m = ${N(ys[1]-ys[0])} ÷ ${s} = ${N(m)}`]}};
+  return{ask:'What is the slope (rate of change) of this table?',vis:xyTable(xs,ys),a:m,hint:'Slope = '+fr('change in y','change in x'),steps:[`change in y = ${N(ys[1]-ys[0])}, change in x = ${s}`,`m = ${fr(N(ys[1]-ys[0]),s)} = ${N(m)}`]}};
 G.slopePts=()=>{const x1=ri(-6,6),y1=ri(-6,6),run=rnz(-6,6),rise=rnz(-8,8),x2=x1+run,y2=y1+rise;
   return{ask:`Find the slope of the line through (${N(x1)}, ${N(y1)}) and (${N(x2)}, ${N(y2)}). Fractions are OK, like 2/3.`,a:rise/run,
     hint:'Slope = (y₂ − y₁) ÷ (x₂ − x₁).',steps:[`m = (${N(y2)} − ${P(y1)}) ÷ (${N(x2)} − ${P(x1)})`,`m = ${N(rise)} ÷ ${N(run)} = ${fracStr(rise,run)}`]}};
@@ -1562,9 +1581,9 @@ V('dilate',
  ()=>MC('A triangle is dilated by a scale factor of 3. What happens to its angles?','They stay the same',['They get 3 times bigger','They get 3 times smaller','They add to 540°'],'Dilations change side lengths, not angle measures.'),
 );
 V('similar',
- ()=>{const w=ri(2,8),h=ri(2,9),k=pick([2,3,1.5]),yes=Math.random()<.5,W=w*k,H=yes?h*k:h*k+pick([1,2,-1]);if(!Number.isInteger(W)||!Number.isInteger(H)||H<=0||w===h)return null;const ans=yes?'Yes':'No';return choiceP({ask:`Rectangle A is ${w} by ${h}. Rectangle B is ${W} by ${H}. Are they similar?`,choices:['Yes','No'],a:ans,hint:'Similar means both sides grow by the same scale factor.',steps:[`${W} ÷ ${w} = ${dec(W/w)}`,`${H} ÷ ${h} = ${dec(H/h)}`,ans]})},
+ ()=>{const w=ri(2,8),h=ri(2,9),k=pick([2,3,1.5]),yes=Math.random()<.5,W=w*k,H=yes?h*k:h*k+pick([1,2,-1]);if(!Number.isInteger(W)||!Number.isInteger(H)||H<=0||w===h)return null;const ans=yes?'Yes':'No';return choiceP({ask:`Rectangle A is ${h} long by ${w} wide. Rectangle B is ${H} long by ${W} wide. Are they similar?`,choices:['Yes','No'],a:ans,hint:'Similar means both sides grow by the same scale factor.',steps:[`${W} ÷ ${w} = ${dec(W/w)}`,`${H} ÷ ${h} = ${dec(H/h)}`,ans]})},
  ()=>{const h=ri(4,9),s=ri(2,6),k=ri(2,6),Sh=s*k;return{ask:`A ${h} ft post casts a ${s} ft shadow. At the same time a tree casts a ${Sh} ft shadow. How tall is the tree (in ft)?`,a:h*k,hint:'The triangles are similar. Set up height/shadow = height/shadow.',steps:[`${h}/${s} = x/${Sh}`,`x = ${h} × ${k} = ${h*k}`]}},
- ()=>{const k=pick([2,3,4]),w=ri(2,6),l=ri(3,9);return{ask:`A photo is ${w} in by ${l} in. It is enlarged so the width is ${w*k} in. How long is the enlarged photo (in inches)?`,a:l*k,hint:'Find the scale factor from the widths.',steps:[`Scale factor = ${w*k} ÷ ${w} = ${k}`,`${l} × ${k} = ${l*k}`]}},
+ ()=>{const k=pick([2,3,4]),w=ri(2,6),l=ri(3,9);return{ask:`A photo is ${l} in long by ${w} in wide. It is enlarged so the width is ${w*k} in. How long is the enlarged photo (in inches)?`,a:l*k,hint:'Find the scale factor from the widths.',steps:[`Scale factor = ${w*k} ÷ ${w} = ${k}`,`${l} × ${k} = ${l*k}`]}},
  ()=>MC('Which sequence always gives a similar (but not congruent) figure?','A rotation then a dilation by 2',['A translation then a reflection','A reflection then a rotation','Two translations'],'Only a dilation changes size. Without one, the figures are congruent.'),
 );
 G.seqTrans=()=>{const x=rnz(-5,5),y=rnz(-5,5),n=ptName(),T=[
@@ -1608,7 +1627,7 @@ G.aaSim=()=>pick([
 
 /* ----- Unit 4: Linear Equations ----- */
 V('slopeTable',
- ()=>{const m=rnz(-4,4),b=rnz(-10,10),xs=[ri(-3,0)];for(let i=0;i<3;i++)xs.push(xs[i]+ri(1,3));const ys=xs.map(x=>m*x+b);return{ask:'What is the slope? (Watch the x-values.)',vis:xyTable(xs,ys),a:m,hint:'The x-values do not go up by 1 each time. Use Δy ÷ Δx.',steps:[`(${N(ys[1])} − ${P(ys[0])}) ÷ (${N(xs[1])} − ${P(xs[0])}) = ${N(m)}`]}},
+ ()=>{const m=rnz(-4,4),b=rnz(-10,10),xs=[ri(-3,0)];for(let i=0;i<3;i++)xs.push(xs[i]+ri(1,3));const ys=xs.map(x=>m*x+b);return{ask:'What is the slope? (Watch the x-values.)',vis:xyTable(xs,ys),a:m,hint:'The x-values do not go up by 1 each time. Use '+fr('change in y','change in x')+'.',steps:[`(${N(ys[1])} − ${P(ys[0])}) ÷ (${N(xs[1])} − ${P(xs[0])}) = ${N(m)}`]}},
  ()=>{const m=rnz(-5,5),b=rnz(-10,10),s=pick([1,2]),xs=[1,2,3,4].map(i=>i*s),ys=xs.map(x=>m*x+b);return{ask:'What is the y-intercept of the line in this table?',vis:xyTable(xs,ys),a:b,hint:'Find the slope. Then work backwards to x = 0.',steps:[`slope = ${N(m)}`,`b = ${N(ys[0])} − ${N(m)}(${xs[0]}) = ${N(b)}`]}},
  ()=>{const m=rnz(-5,5),b=rnz(-10,10),xs=[0,1,2,3,4],ys=xs.map(x=>m*x+b),h=ri(1,4);return{ask:'The table is linear. What is the missing y-value?',vis:`<table class="dt"><tr><th>x</th>${xs.map(x=>`<td>${x}</td>`).join('')}</tr><tr><th>y</th>${ys.map((y,i)=>`<td>${i===h?'?':N(y)}</td>`).join('')}</tr></table>`,a:ys[h],hint:'y changes by the same amount each step.',steps:[`Each step adds ${N(m)}`,`Missing value = ${N(ys[h])}`]}},
  ()=>{const c=pick([['Hours','Miles biked',ri(5,12)],['Tickets','Dollars',ri(5,15)],['Minutes','Pages read',ri(1,3)]]),s=pick([1,2]),xs=[1,2,3,4].map(i=>i*s);return{ask:`The table shows ${c[1].toLowerCase()} vs. ${c[0].toLowerCase()}. What is the rate of change?`,vis:table([c[0],c[1]],xs.map(x=>[x,c[2]*x])),a:c[2],hint:`Divide the change in ${c[1].toLowerCase()} by the change in ${c[0].toLowerCase()}.`,steps:[`${c[2]*(xs[1]-xs[0])} ÷ ${xs[1]-xs[0]} = ${c[2]}`]}},
@@ -1623,7 +1642,7 @@ V('readMB',
  ()=>{const m=rnz(-9,9);return{ask:'What is the y-intercept of this line?',eq:`y = ${tm(m)}`,a:0,hint:'No constant means b = 0.',steps:['b = 0. The line goes through the origin.']}},
  ()=>{let p,q;do{p=rnz(-5,5);q=ri(2,6)}while(gcd(p,q)!==1);const b=rnz(-9,9);return{ask:'What is the slope? Fractions are OK.',eq:`y = ${fracHTML(p,q)}x${plus(b)}`,a:p/q,show:fracStr(p,q),hint:'The slope is the fraction in front of x.',steps:[`m = ${fracStr(p,q)}`]}},
  ()=>{let a,b;do{a=rnz(-6,6);b=rnz(-6,6)}while(Math.abs(a)===Math.abs(b));const L1=lin(a,ri(-5,5)),L2=lin(b,ri(-5,5)),ans=Math.abs(a)>Math.abs(b)?L1:L2;return choiceP({ask:'Which line is steeper?',choices:[L1,L2],a:ans,hint:'Compare the absolute values of the slopes. Ignore the sign.',steps:[`|${N(a)}| vs. |${N(b)}|`,ans]})},
- ()=>{const m=rnz(-4,4),b=ri(-6,6);return{type:'pair',ask:'Enter the slope and y-intercept of the graphed line as (m, b).',vis:plane([{x:0,y:b,label:''},{x:1,y:m+b,label:''}],10,[{m,b}]),a:[m,b],show:`(${N(m)}, ${N(b)})`,hint:'Find where it crosses the y-axis. Then count rise over run.',steps:[`b = ${N(b)}`,`m = ${N(m)}`]}},
+ ()=>{const m=rnz(-4,4),b=ri(-6,6);return{type:'pair',fmt:'mb',ask:'Complete the equation of the graphed line.',vis:plane([{x:0,y:b,label:''},{x:1,y:m+b,label:''}],10,[{m,b}]),a:[m,b],show:`(${N(m)}, ${N(b)})`,hint:'Find where it crosses the y-axis. Then count rise over run.',steps:[`b = ${N(b)}`,`m = ${N(m)}`]}},
 );
 V('writeEq',
  ()=>{const m=rnz(-4,4),b=rnz(-8,8),x1=rnz(-4,4);let x2;do x2=rnz(-4,4);while(x2===x1);const y1=m*x1+b,y2=m*x2+b,right=lin(m,b),set=new Set([right]);for(const d of [lin(-m,b),lin(m,-b),lin(b,m),lin(m,y1)])if(set.size<4)set.add(d);if(set.size<4)return null;return choiceP({ask:`Which equation passes through (${N(x1)}, ${N(y1)}) and (${N(x2)}, ${N(y2)})?`,choices:shuffle([...set]),a:right,hint:'Find the slope first. Then use one point to find b.',steps:[`m = ${N(y2-y1)} ÷ ${N(x2-x1)} = ${N(m)}`,`b = ${N(y1)} − ${N(m)}(${N(x1)}) = ${N(b)}`,right]})},
@@ -1787,8 +1806,8 @@ V('converse',
  ()=>{const k=pick([[5,12,13],[6,7,9],[8,15,17],[4,5,6],[9,40,41],[7,8,11],[12,35,37],[2,3,4],[11,60,61],[10,10,14]]),s=shuffle(k),ans=k[0]**2+k[1]**2===k[2]**2?'Yes':'No';return choiceP({ask:`Can sides of ${s.join(', ')} make a right triangle?`,choices:['Yes','No'],a:ans,hint:'Use the longest side as c.',steps:[`${k[0]}² + ${k[1]}² = ${k[0]**2+k[1]**2}`,`${k[2]}² = ${k[2]**2}`,ans]})},
 );
 G.pythWord=()=>pick([
- ()=>{const [l,w,h]=pick([[3,4,12],[2,3,6],[6,8,24],[4,4,7],[1,4,8],[2,6,9],[6,6,7]]),d=Math.sqrt(l*l+w*w+h*h);return{ask:`A box is ${l} by ${w} by ${h} inches. How long is the longest straight stick that fits inside, from corner to opposite corner (in inches)?`,a:d,hint:'First find the diagonal of the bottom. Then use it with the height.',steps:[`bottom diagonal² = ${l*l} + ${w*w} = ${l*l+w*w}`,`d² = ${l*l+w*w} + ${h*h} = ${l*l+w*w+h*h}`,`d = ${d}`]}},
- ()=>{const [a,b,c]=pick(TRIPLES.slice(0,5));return{ask:`A field is ${a*10} m wide and ${b*10} m long. How far is it diagonally from corner to corner (in m)?`,a:c*10,hint:'The diagonal is the hypotenuse.',steps:[`${a*10}² + ${b*10}² = c²`,`c = ${c*10}`]}},
+ ()=>{const [l,w,h]=pick([[3,4,12],[2,3,6],[6,8,24],[4,4,7],[1,4,8],[2,6,9],[6,6,7]]),d=Math.sqrt(l*l+w*w+h*h);return{ask:`A box is ${l} in long, ${w} in wide and ${h} in tall. How long is the longest straight stick that fits inside, from corner to opposite corner (in inches)?`,a:d,hint:'First find the diagonal of the bottom. Then use it with the height.',steps:[`bottom diagonal² = ${l*l} + ${w*w} = ${l*l+w*w}`,`d² = ${l*l+w*w} + ${h*h} = ${l*l+w*w+h*h}`,`d = ${d}`]}},
+ ()=>{const [a,b,c]=pick(TRIPLES.slice(0,5));return{ask:`A field is ${b*10} m long and ${a*10} m wide. How far is it diagonally from corner to corner (in m)?`,a:c*10,hint:'The diagonal is the hypotenuse.',steps:[`${a*10}² + ${b*10}² = c²`,`c = ${c*10}`]}},
  ()=>{const [a,b,c]=pick(TRIPLES);return{ask:`A kite string is ${c} m long. The kite is directly above a spot ${a} m away from you. How high is the kite (in m)?`,a:b,hint:'The string is the hypotenuse.',steps:[`b² = ${c*c} − ${a*a}`,`b = ${b}`]}},
  ()=>{const s=ri(3,12),d=s*Math.SQRT2;return{ask:`A square has sides of ${s} cm. How long is its diagonal? Round to the nearest tenth.`,a:d,tol:0.06,show:d.toFixed(1),hint:'The diagonal splits the square into two right triangles.',steps:[`d² = ${s*s} + ${s*s} = ${2*s*s}`,`d ≈ ${d.toFixed(1)}`]}},
  ()=>{const [a,b,c]=pick(TRIPLES),n=nm();return{ask:`${n} rides a bike ${a} km east, then ${b} km north. How far is ${n} from the start, in a straight line (km)?`,a:c,hint:'East and north make a right angle.',steps:[`√(${a*a} + ${b*b}) = ${c}`]}},
@@ -1914,7 +1933,7 @@ function workHTML(w,n=Infinity,num=false){
 function gen(id){for(let i=0;i<50;i++){const p=G[id]();if(p){if(p.solve){try{p.work=solveWork(...p.solve)}catch(e){}}
   if(typeof st!=='undefined'&&(st.mode==null||st.mode==='mist')&&Math.random()<FIX_RATE){
     if(p.work&&FIXABLE.has(id)){const q=makeFix(p);if(q){q.topic=id;return q}}
-    else if(FIXGEN[id]){for(let k=0;k<10;k++){const q=FIXGEN[id]();if(q){q.topic=id;return q}}}}p.type=p.type||'num';p.topic=id;if(p.show==null)p.show=p.type==='pair'?`(${N(p.a[0])}, ${N(p.a[1])})`:p.type==='choice'?p.a:showNum(p.a);return p}}}
+    else if(FIXGEN[id]){for(let k=0;k<10;k++){const q=FIXGEN[id]();if(q){q.topic=id;return q}}}}p.type=p.type||'num';p.topic=id;if(p.fmt==='mb')p.show=lin(p.a[0],p.a[1]);if(p.show==null)p.show=p.type==='pair'?`(${N(p.a[0])}, ${N(p.a[1])})`:p.type==='choice'?p.a:showNum(p.a);return p}}}
 
 /* ---------- answer checking ---------- */
 function parseNum(s){
@@ -1992,7 +2011,7 @@ function rankBlock(compact){
   const locked=!allPassed()&&r.next==='Champion I';
   const line=M?`${rp.toLocaleString('en-US')} RP · 100% on all 10 unit tests`:r.next?(locked?`${rp.toLocaleString('en-US')} RP · Pass all 10 unit tests to unlock Champion I`:`${rp.toLocaleString('en-US')} RP · ${r.hi-rp} to ${r.next}`):`${rp.toLocaleString('en-US')} RP · 100% on all 10 unit tests unlocks Master`;
   return `<div class="rankcard ban-${S.look.banner}${compact?' compact':''}">${M?emblemMaster(compact?44:64):emblem(rp,compact?44:64)}
-    <div class="rk"><div class="rkname${M?' master':''}" style="${M?'':`color:var(--r-${r.cls})`}">${M?'Master':r.full}</div><div class="rktitle">${lookItem('title')[1]}</div>
+    <div class="rk"><div class="rkname${M?' master':''}" style="${M?'':`color:var(--r-${r.cls})`}">${M?'Master of 8th Grade':r.full}</div><div class="rktitle">${lookItem('title')[1]}</div>
     <div class="rkrp">${line}</div>
     <div class="progress"><div style="width:${M?100:pct}%;background:${M?'linear-gradient(90deg,var(--r-champion),var(--r-diamond),var(--r-platinum),var(--r-gold))':`var(--r-${r.cls})`}"></div></div>
     ${compact?'':`<div class="umast"><span>Unit tests passed</span><span class="upips">${UNITS.map(u=>{const T0=S.tests[u.n];return `<i class="${T0&&T0.perfect?'on perfect':T0&&T0.passed?'on':''}" title="Unit ${u.n}"></i>`}).join('')}</span><b>${um}/10</b></div>`}</div></div>`;
@@ -2044,7 +2063,7 @@ function practice(){
   const p=st.p,u=uOf(st.unit),subName=u.topics.find(x=>x[0]===p.topic)[1];
   let ans='';
   if(p.type==='num')ans=`<div class="answer"><input id="a1" inputmode="text" autocomplete="off" aria-label="Your answer" placeholder="?" ${st.done?'disabled':''}></div>`;
-  if(p.type==='pair')ans=`<div class="answer"><span class="pair">( <input id="a1" aria-label="x-coordinate" placeholder="x" autocomplete="off" ${st.done?'disabled':''}> , <input id="a2" aria-label="y-coordinate" placeholder="y" autocomplete="off" ${st.done?'disabled':''}> )</span></div>`;
+  if(p.type==='pair'&&p.fmt==='mb')ans=mbInputs(st.done?'disabled':'');else if(p.type==='pair')ans=`<div class="answer"><span class="pair">( <input id="a1" aria-label="x-coordinate" placeholder="x" autocomplete="off" ${st.done?'disabled':''}> , <input id="a2" aria-label="y-coordinate" placeholder="y" autocomplete="off" ${st.done?'disabled':''}> )</span></div>`;
   if(p.type==='choice')ans=`<div class="choices">${p.choices.map((c,i)=>`<button class="choice" data-choice="${i}" ${st.done?'disabled':''}>${c}</button>`).join('')}</div>`;
   const MM=st.mode==='mist',WM=st.mode==='warm',LS=st.mode==='lesson',TS=st.mode==='test',PL=st.mode==='placement'||TS,pl=TS?S.testing:S.placing,kind=TS?'unit test':'placement';
   app.innerHTML=`<button class="back" data-go="${WM||MM?'home':'unit'}">${MM?'← Stop review':WM?'← Quit warm-up':PL?`← Pause ${kind} (progress saved)`:`← Unit ${u.n} topics`}</button>
@@ -2104,7 +2123,7 @@ const firstStep=p=>p.work?(p.work.moves.length?[1]:null):p.steps.length>=3?p.ste
 function showHint(){st.hintLevel++;const p=st.p,fs=st.hintLevel>=2&&firstStep(p);
   feedback('hint',`<b>Hint:</b> ${p.hint}${fs?`<div class="step1"><b>First step:</b>${p.work?workHTML(p.work,1):`<ul class="steps">${fs.map(x=>`<li>${x}</li>`).join('')}</ul>`}</div>`:''}`);renderActions()}
 const stepsHTML=p=>p.fixRight?`<div>${p.steps[0]} Here is the correct work:</div><ol class="steps fixok">${p.fixRight.map(x=>`<li>${x}</li>`).join('')}</ol>`:p.fix?`<div>${p.steps[0]} Here is the correct work:</div>${workHTML(p.work)}`:p.work?workHTML(p.work):`<ul class="steps">${p.steps.map(s=>`<li>${s}</li>`).join('')}</ul>`;
-const rpTag=d=>`<span class="rptag ${d>=0?'up':'down'}">${signed(d)} RP</span>`;
+const rpTag=d=>d?`<span class="rptag ${d>=0?'up':'down'}">${signed(d)} RP</span>`:'';
 
 /* Each problem is one "match": first-try win, second-try win, or loss.
    Wins are multiplied by the topic's CMAS weight. Losses are a flat 15. */
@@ -2229,8 +2248,8 @@ function placementResults(){
    rank-up celebration, sound. Every RP reward here uses the CMAS weight (major ×1.5).
    ====================================================================== */
 const RP_STEP_WIN=6;                                   // max base RP after "Show first step"
-const RAPID_SECS=60, RAPID_WIN=2;                      // Quick Play: 2 × weight per correct (major 3, supporting 2). Misses cost 0.
-const SURV_LIVES=3, SURV_WIN=10, SURV_BONUS_EVERY=10;  // Last Stand: 10 × weight per correct (major 15, supporting 10). Bonus life every 10.
+const RAPID_SECS=60, RAPID_WIN=0;                      // Quick Play: 2 × weight per correct (major 3, supporting 2). Misses cost 0.
+const SURV_LIVES=3, SURV_WIN=0, SURV_BONUS_EVERY=10;  // Last Stand: 10 × weight per correct (major 15, supporting 10). Bonus life every 10.
 const MISSION_RP=30;                                   // Daily mission reward. The CMAS major mission pays ×1.5 (45).
 S.badges=S.badges||{};S.stats=Object.assign({streakBest:0,rapidBest:0,survBest:0,missionDays:0},S.stats||{});S.best=S.best||{rapid:{},surv:{}};
 const ov=document.getElementById('overlay');
@@ -2279,7 +2298,7 @@ function todaysMissions(){ // the CMAS major mission every day + 2 others picked
 }
 function checkMissions(){
   const d=D();let n=0;
-  for(const m of todaysMissions()){if(d.done.includes(m.id)||m.val(d)<m.goal)continue;d.done.push(m.id);n++;seasonNote(m.id);const g=applyRP(missionRP(m),null);toast(`${cheer()} Mission complete · ${signed(g)} RP`,'up');sfx('mission')}
+  for(const m of todaysMissions()){if(d.done.includes(m.id)||m.val(d)<m.goal)continue;d.done.push(m.id);n++;seasonNote(m.id);const g=applyRP(missionRP(m),null);toast(`${cheer()} Mission complete${g?' · '+signed(g)+' RP':''}`,'up');sfx('mission')}
   if(n&&d.done.length===3&&!d.allDone){d.allDone=true;S.stats.missionDays++}
   save();checkBadges();
 }
@@ -2287,7 +2306,7 @@ function missionsCard(){
   const d=D(),ms=todaysMissions();
   return `<div class="missions"><div class="mhead"><span class="pltitle">Daily missions</span><span class="ts">${d.done.length}/3 done · New missions at midnight</span></div>
   ${ms.map(m=>{const v=Math.min(m.val(d),m.goal),done=d.done.includes(m.id);return `<div class="mrow${done?' done':''}"><span class="mcheck">${done?ICON.check:''}</span>
-    <span class="mtxt">${m.txt}<span class="mbar"><i style="width:${Math.round(100*v/m.goal)}%"></i></span></span><span class="mrp">${done?'Done':`${v}/${m.goal} · +${missionRP(m)} RP`}</span></div>`}).join('')}</div>`;
+    <span class="mtxt">${m.txt}<span class="mbar"><i style="width:${Math.round(100*v/m.goal)}%"></i></span></span><span class="mrp">${done?'Done':`${v}/${m.goal}`}</span></div>`}).join('')}</div>`;
 }
 
 /* ---------- badges ---------- */
@@ -2313,7 +2332,7 @@ const BADGES=[ // id, name, how to earn, medal text, color
   ['test5','Halfway Hero','Pass 5 unit tests','5✓','var(--good)',()=>unitsPassed()>=5],
   ['test10','Full Clear','Pass all 10 unit tests','10✓','var(--good)',()=>allPassed()],
   ['perfect','Perfect Score','Get 100% on a unit test','100','var(--r-gold)',()=>UNITS.some(u=>S.tests[u.n]&&S.tests[u.n].perfect)],
-  ['master','Master','100% on all 10 unit tests','M','var(--r-champion)',()=>!!S.master],
+  ['master','Master of 8th Grade','100% on every unit test and beat every Ranked robot','M','var(--r-champion)',()=>!!S.master],
   ['learn1','First Lesson','Finish a lesson','L','var(--r-platinum)',()=>Object.keys(S.lessons).length>=1],
   ['learn10','Student','Finish 10 lessons','10L','var(--r-platinum)',()=>Object.keys(S.lessons).length>=10],
   ['learn30','Scholar','Finish 30 lessons','30L','var(--r-diamond)',()=>Object.keys(S.lessons).length>=30],
@@ -2392,7 +2411,7 @@ function modesRow(u){
 function answerHTML(p,dis){
   const d=dis?'disabled':'';
   if(p.type==='num')return `<div class="answer"><input id="a1" inputmode="text" autocomplete="off" aria-label="Your answer" placeholder="?" ${d}></div>`;
-  if(p.type==='pair')return `<div class="answer"><span class="pair">( <input id="a1" aria-label="x-coordinate" placeholder="x" autocomplete="off" ${d}> , <input id="a2" aria-label="y-coordinate" placeholder="y" autocomplete="off" ${d}> )</span></div>`;
+  if(p.type==='pair'&&p.fmt==='mb')return mbInputs(d);if(p.type==='pair')return `<div class="answer"><span class="pair">( <input id="a1" aria-label="x-coordinate" placeholder="x" autocomplete="off" ${d}> , <input id="a2" aria-label="y-coordinate" placeholder="y" autocomplete="off" ${d}> )</span></div>`;
   return `<div class="choices">${p.choices.map((c,i)=>`<button class="choice" data-choice="${i}" ${d}>${c}</button>`).join('')}</div>`;
 }
 function startRun(kind,mix){
@@ -2427,10 +2446,10 @@ function arena0(){
   const left=rapid?Math.max(0,R.end-Date.now()):0,secs=Math.ceil(left/1000);
   const top=rapid
     ?`<div class="arena-top"><div class="timer"><span id="tleft">${secs}</span>s</div><div class="stats"><div class="stat"><b>${R.score}</b><span>Score</span></div>
-      <div class="stat hot${R.combo>=3?' fire':''}"><b>${R.combo>=3?ICON.flame:''}×${R.combo}</b><span>Combo</span></div><div class="stat"><b class="up">${signed(R.rp)}</b><span>RP</span></div></div></div>
+      <div class="stat hot${R.combo>=3?' fire':''}"><b>${R.combo>=3?ICON.flame:''}×${R.combo}</b><span>Combo</span></div><div class="stat"><b>${S.best[R.kind][R.unit]||0}</b><span>Best</span></div></div></div>
       <div class="tbar${secs<=10?' low':''}"><div id="tbar" style="width:${100*left/(RAPID_SECS*1000)}%"></div></div>`
     :`<div class="arena-top"><div class="hearts" role="img" aria-label="${R.hearts} lives left">${Array.from({length:SURV_LIVES},(_,i)=>`<span class="${i<R.hearts?'':'lost'}">${ICON.heart}</span>`).join('')}</div>
-      <div class="stats"><div class="stat"><b>${R.score}</b><span>Survived</span></div><div class="stat"><b class="up">${signed(R.rp)}</b><span>RP</span></div></div></div>`;
+      <div class="stats"><div class="stat"><b>${R.score}</b><span>Survived</span></div><div class="stat"><b>${S.best[R.kind][R.unit]||0}</b><span>Best</span></div></div></div>`;
   app.innerHTML=`<button class="back" data-act="quit">← End run</button><div class="eyebrow">${rapid?'Quick Play':'Last Stand'} · ${R.mix?'All units':'Unit '+u.n}</div>${top}
   <div class="card" id="card"><div class="cardtop"><span class="ts">${sub}</span></div>
     <p class="ask">${p.ask}</p>${p.eq?`<div class="eq">${p.eq}</div>`:''}${p.eq2?`<div class="eq">${p.eq2}</div>`:''}${p.vis?`<div class="vis">${p.vis}</div>`:''}
@@ -2470,7 +2489,7 @@ function endRun(){
   <div class="runres"><div class="eyebrow">${kind==='rapid'?'Quick Play':'Last Stand'} · ${R.mix?'All units':'Unit '+R.unit}</div><div class="bigscore">${R.score}</div>
     <div class="ts">${kind==='rapid'?`right in ${RAPID_SECS} seconds${acc}`:'problems survived'}</div>
     ${isBest&&R.score>0?'<div class="newbest">New personal best</div>':`<div class="ts">Your best: ${S.best[kind][R.unit]||0}</div>`}
-    <div class="runrp">${rpTag(R.rp)}</div></div>${rankBlock(true)}
+    <div class="runrp">${brag(kind,R.score)}</div></div>
   <div class="actions"><button class="btn" data-act="${kind}"${R.mix?' data-mix="1"':''}>Play again</button><button class="btn ghost" data-go="${R.mix?'home':'unit'}">${R.mix?'Home':'Back to topics'}</button></div>${foot}`;
   window.scrollTo(0,0);checkMissions();
   if(st.pendingRank){st.pendingRank=false;showCeleb()}
@@ -2614,9 +2633,9 @@ FIXGEN.rotate=()=>{const x=rnz(-8,8),y=rnz(-8,8),right=['Rule for 90° countercl
 FIXGEN.dilate=()=>{const k=pick([2,3,4]),x=rnz(-4,4),y=rnz(-4,4),right=[`x: ${N(x)} × ${k} = ${N(k*x)}`,`y: ${N(y)} × ${k} = ${N(k*y)}`,`A′(${N(k*x)}, ${N(k*y)})`];
   const wrong=pick([[right[0],`y: ${N(y)} + ${k} = ${N(y+k)}`,`A′(${N(k*x)}, ${N(y+k)})`],[`x: ${N(x)} + ${k} = ${N(x+k)}`,right[1],`A′(${N(x+k)}, ${N(k*y)})`]]);
   return fixQ({lead:`Dilate A(${N(x)}, ${N(y)}) by a scale factor of ${k} about the origin.`,right,wrong,why:'A dilation MULTIPLIES both coordinates by the scale factor.'})};
-FIXGEN.similar=()=>{const w=ri(2,8),h=ri(2,9),k=ri(2,4),W=w*k,right=[`Scale factor = ${W} ÷ ${w} = ${k}`,`Height = ${h} × ${k} = ${h*k} cm`];
-  const wrong=pick([[`Scale factor = ${W} − ${w} = ${W-w}`,`Height = ${h} × ${W-w} = ${h*(W-w)} cm`],[right[0],`Height = ${h} + ${k} = ${h+k} cm`]]);if(W-w===k)return null;
-  return fixQ({lead:`Two rectangles are similar. The small one is ${w} cm wide and ${h} cm tall. The big one is ${W} cm wide. Find its height.`,right,wrong,why:'Similar figures use a scale factor: divide to find it, then multiply.'})};
+FIXGEN.similar=()=>{const w=ri(2,8),h=ri(2,9),k=ri(2,4),W=w*k,right=[`Scale factor = ${W} ÷ ${w} = ${k}`,`Length = ${h} × ${k} = ${h*k} cm`];
+  const wrong=pick([[`Scale factor = ${W} − ${w} = ${W-w}`,`Length = ${h} × ${W-w} = ${h*(W-w)} cm`],[right[0],`Length = ${h} + ${k} = ${h+k} cm`]]);if(W-w===k)return null;
+  return fixQ({lead:`Two rectangles are similar. The small one is ${h} cm long and ${w} cm wide. The big one is ${W} cm wide. Find its length.`,right,wrong,why:'Similar figures use a scale factor: divide to find it, then multiply.'})};
 /* Unit 3 */
 FIXGEN.triSum=()=>{const a=ri(25,90),b=ri(20,150-a),c=180-a-b;if(c<10)return null;const right=[`${a} + ${b} = ${a+b}`,`180 − ${a+b} = ${c}°`];
   const wrong=pick([[right[0],`360 − ${a+b} = ${360-a-b}°`],[`${a} + ${b} = ${a+b+10}`,`180 − ${a+b+10} = ${c-10}°`]]);
@@ -2643,7 +2662,7 @@ FIXGEN.slopePts=()=>{const x1=ri(-6,2),y1=ri(-6,6),run=ri(1,6),rise=rnz(-8,8),x2
 FIXGEN.slopeTable=()=>{const m=rnz(-5,5),b=rnz(-8,8),s=pick([2,3]),xs=[0,1,2,3].map(i=>i*s),ys=xs.map(x=>m*x+b),dy=ys[1]-ys[0];
   const right=[`Change in y: ${N(ys[1])} − ${P(ys[0])} = ${N(dy)}`,`Change in x: ${xs[1]} − ${xs[0]} = ${s}`,`slope = ${N(dy)} ÷ ${s} = ${N(m)}`];
   const wrong=pick([[right[0],right[1],`slope = ${s} ÷ ${P(dy)} = ${fracStr(s,dy)}`],[right[0],`Change in x: 1 row = 1`,`slope = ${N(dy)} ÷ 1 = ${N(dy)}`]]);
-  return fixQ({lead:'Find the slope from the table.',vis:xyTable(xs,ys),right,wrong,why:wrong[1]!==right[1]?`The x-values go up by ${s}, not 1.`:'Slope = change in y ÷ change in x.'})};
+  return fixQ({lead:'Find the slope from the table.',vis:xyTable(xs,ys),right,wrong,why:wrong[1]!==right[1]?`The x-values go up by ${s}, not 1.`:'Slope = '+fr('change in y','change in x')+'.'})};
 FIXGEN.readMB=()=>{const m=rnz(-9,9),b=-ri(1,12),right=[`m = ${N(m)}`,`b = ${N(b)}`,`Slope ${N(m)}, y-intercept ${N(b)}`];
   const wrong=[right[0],`b = ${N(-b)}`,`Slope ${N(m)}, y-intercept ${N(-b)}`];
   return fixQ({lead:'Find the slope and y-intercept.',eq:lin(m,b),right,wrong,why:'Keep the sign: y = mx − 5 means b = −5.'})};
@@ -2829,7 +2848,7 @@ const LESSONS={
  anglePairs:['When a line crosses two parallel lines, the angles come in equal or supplementary pairs.',['Equal: vertical, corresponding, alternate interior, alternate exterior.','Add to 180°: linear pair, same-side interior.','Complementary angles add to 90°.']],
  angleAlg:['Use an angle rule to write an equation. Then solve for x.',['Decide: are the angles equal, or do they add to 90° or 180°?','Write the equation.','Solve for x (and plug in if they ask for the angle).']],
  aaSim:['If two angles of one triangle match two angles of another, the triangles are similar (Angle-Angle).',['Find the third angle with 180°.','Compare all three angles.','Matching angles → similar → sides share a scale factor.']],
- slopeTable:['Slope is the rate of change: how much y changes for each 1 unit of x.',['Pick two rows.','Slope = change in y ÷ change in x.','Check: every pair of rows gives the same slope if it is linear.']],
+ slopeTable:['Slope is the rate of change: how much y changes for each 1 unit of x.',['Pick two rows.','Slope = '+fr('change in y','change in x')+'.','Check: every pair of rows gives the same slope if it is linear.']],
  slopePts:['Slope = rise over run between two points.',['m = (y₂ − y₁) ÷ (x₂ − x₁).','Same y-values → slope 0 (horizontal).','Same x-values → undefined (vertical).']],
  readMB:['In y = mx + b, m is the slope and b is the y-intercept (where the line crosses the y-axis).',['The number with x is m. Keep its sign.','The number alone is b. Keep its sign.','No number alone means b = 0.']],
  writeEq:['To write y = mx + b, you need the slope and the y-intercept.',['Find m (from two points, a table, or a graph).','Plug in one point to find b.','Write y = mx + b.']],
@@ -2845,9 +2864,9 @@ const LESSONS={
  isFunc:['A function gives each input exactly ONE output.',['Look for any x that appears twice.','Same x with different y → not a function.','Vertical line test: a vertical line hits the graph only once.']],
  evalF:['f(x) means "the output when the input is x".',['Replace x with the number in parentheses.','Follow order of operations.','To find x for a given output, set the rule equal to it and solve.']],
  linTable:['Linear functions change by the same amount every step. Their graph is a straight line.',['Check the change in y for each step of x.','Same change every time → linear.','x², x³, or x in a denominator or exponent → nonlinear.']],
- compareRate:['To compare functions, find the rate of change (slope) and the initial value of each.',['Table: slope = change in y ÷ change in x.','Equation: slope is the number with x.','Initial value = y when x = 0.']],
+ compareRate:['To compare functions, find the rate of change (slope) and the initial value of each.',['Table: slope = '+fr('change in y','change in x')+'.','Equation: slope is the number with x.','Initial value = y when x = 0.']],
  incDec:['Read a function left to right.',['Going up → increasing (positive slope).','Going down → decreasing (negative slope).','Flat → constant (slope 0).']],
- rateInit:['Rate of change = how fast it changes. Initial value = where it starts.',['Rate = change in y ÷ change in x. Negative if it goes down.','Initial value = the value when x = 0.','Work backwards from a point to find the start.']],
+ rateInit:['Rate of change = how fast it changes. Initial value = where it starts.',['Rate = '+fr('change in y','change in x')+'. Negative if it goes down.','Initial value = the value when x = 0.','Work backwards from a point to find the start.']],
  prodRule:['Multiplying powers with the same base? Add the exponents.',['aᵐ · aⁿ = aᵐ⁺ⁿ.','Multiply the numbers in front separately.','Bases must match.']],
  quotRule:['Dividing powers with the same base? Subtract the exponents.',['aᵐ ÷ aⁿ = aᵐ⁻ⁿ.','Divide the numbers in front separately.','The answer can be a negative exponent.']],
  powRule:['A power raised to a power? Multiply the exponents.',['(aᵐ)ⁿ = aᵐⁿ.','The outside exponent applies to EVERY factor inside.','(2x³)² = 4x⁶.']],
@@ -3007,9 +3026,9 @@ function nextTest(){
   const openBefore=openSet(),before=metKeys(),wasPassed=R.passed,passed=pct>=TEST_PASS,wasMaster=!!S.master;
   R.attempts++;R.last=today();R.best=Math.max(R.best,pct);R.lastScore=pct;R.lastRes=q.res;
   let bonus=0;
-  if(passed){for(const [id] of u.topics)if(!missed.includes(id))T(id).flag=false;if(!wasPassed){R.passed=true;bonus=applyRP(Math.round(TEST_BONUS*unitAvgW(u)),null)}if(pct===1)R.perfect=true}
+  if(passed){for(const [id] of u.topics)if(!missed.includes(id))T(id).flag=false;if(!wasPassed){R.passed=true;bonus=0}if(pct===1)R.perfect=true}
   else for(const id of missed){const t=T(id);t.flag=true;t.recent=[];t.placed=false}
-  if(!wasMaster&&allPerfect())S.master=true;
+  if(!wasMaster&&allPerfect()&&(S.ranked&&S.ranked.beat||0)>=10)S.master=true;
   const after=metKeys(),fresh=[];for(const [cat,c] of Object.entries(LOCKER))for(const it of c.items)if(after.has(cat+':'+it[0])&&!before.has(cat+':'+it[0]))fresh.push(`${c.name}: ${it[1]}`);
   S.testing=null;st.mode=null;save();
   testResults(u,{pct,right,tot,passed,wasPassed,bonus,missed,fresh,rp:q.rp});
@@ -3041,8 +3060,8 @@ function emblemMaster(size=56){
   <path d="M32 2l7 13 14-3-6 13 13 9-14 4 2 15-12-8-4 13-4-13-12 8 2-15-14-4 13-9-6-13 14 3z" fill="url(#${g})"/><path d="M20 38V26l6 6 6-9 6 9 6-6v12z" fill="#fff"/></svg>`;
 }
 function showMaster(){
-  ov.innerHTML=`<div class="ovbox" role="dialog" aria-modal="true" aria-label="Master rank"><canvas id="confetti"></canvas><div class="ovkick">100% on all 10 unit tests</div>
-  <div class="ovemb">${emblemMaster(132)}</div><div class="ovrank master">Master</div><div class="ovacts"><button class="btn" data-ov="close" id="ovclose">Continue</button><button class="btn ghost" data-ov="locker">See rewards</button></div></div>`;
+  ov.innerHTML=`<div class="ovbox" role="dialog" aria-modal="true" aria-label="Master rank"><canvas id="confetti"></canvas><div class="ovkick">100% on every unit test · every robot beaten</div>
+  <div class="ovemb">${emblemMaster(132)}</div><div class="ovrank master">Master of 8th Grade</div><div class="ovacts"><button class="btn" data-ov="close" id="ovclose">Continue</button><button class="btn ghost" data-ov="locker">See rewards</button></div></div>`;
   ov.hidden=false;const b=document.getElementById('ovclose');if(b)b.focus();sfx('rank');confetti();
 }
 
@@ -3479,7 +3498,7 @@ function unitScreen(){unitScreen0();decoratePath()}
    Teacher-only for now (rankedOpen).
    ====================================================================== */
 S.ranked=S.ranked||{beat:0};
-const rankedOpen=()=>!!S.teacher;
+const rankedOpen=()=>true;
 const RK=[
  {name:'Bolt',tag:'Quick on the draw.',col:'#2f8cf5',secs:40,easy:8},
  {name:'Gizmo',tag:'Loves a good puzzle.',col:'#1c9a5c',secs:35,easy:5},
@@ -3547,10 +3566,10 @@ function gradeRanked(correct,choiceBtn,timeout){
 function rkResult(){
   clearInterval(st.timer);const R=st.rk,c=RK[R.lvl],win=R.boss?R.y>=R.queue.length:R.y>R.b;st.mode=null;st.screen='results';
   const first=S.ranked.beat<=R.lvl;if(win&&first)S.ranked.beat=R.lvl+1;
-  const d=applyRP(win?(R.boss?(first?150:30):(first?40:15)):-10,null);save();sfx(win?'mission':'end');
+  const d=0;save();sfx(win?'mission':'end');
   const nxt=win&&R.lvl<RK.length-1;
   app.innerHTML=`<div class="runres ${win?'pass':''}"><div class="rkbig">${robot(c.col,96,c.boss)}</div><div class="verdict">${win?(R.boss?'You beat the boss!':'You beat '+c.name+'!'):c.name+' wins this one'}</div>
-  <div class="bigscore">${R.boss?R.y+'/'+R.queue.length:R.y+' – '+R.b}</div><div class="ts">${win?(first&&R.lvl<RK.length-1?RK[R.lvl+1].name+' is unlocked.':''):'Try again. Every miss is practice.'}</div><div class="runrp">${d?rpTag(d):''}</div></div>${rankBlock(true)}
+  <div class="bigscore">${R.boss?R.y+'/'+R.queue.length:R.y+' – '+R.b}</div><div class="ts">${win?(first&&R.lvl<RK.length-1?RK[R.lvl+1].name+' is unlocked.':''):'Try again. Every miss is practice.'}</div></div>
   <div class="actions">${nxt?`<button class="btn" data-act="rkplay" data-lvl="${R.lvl+1}">Next robot →</button>`:''}<button class="btn${nxt?' ghost':''}" data-act="rkplay" data-lvl="${R.lvl}">${win?'Rematch':'Try again'}</button><button class="btn ghost" data-act="ranked">Ladder</button></div>${foot}`;
   window.scrollTo(0,0);if(st.pendingRank){st.pendingRank=false;showCeleb()}
 }
@@ -3983,7 +4002,7 @@ function hwAnswerText(p){
 function hwProbHTML(p,n,o){
   o=o||{};
   const ch=p.type==='choice'?`<div class="spch">${p.choices.map((c,i)=>`<span><b>${'ABCDEFGH'[i]}.</b> ${c}</span>`).join('')}</div>`:'';
-  const line=p.type==='num'?'<div class="spans">Answer: <i></i></div>':p.type==='pair'?'<div class="spans">Answer: ( <i class="sm"></i> , <i class="sm"></i> )</div>':'';
+  const line=p.type==='num'?'<div class="spans">Answer: <i></i></div>':p.type==='pair'&&p.fmt==='mb'?'<div class="spans">y = <i class="sm"></i>x + <i class="sm"></i></div>':p.type==='pair'?'<div class="spans">Answer: ( <i class="sm"></i> , <i class="sm"></i> )</div>':'';
   return `<div class="sp${o.tall?' tall':''}"><span class="spn">${n}.</span><div class="spb"><p class="ask">${p.ask}</p>${p.eq?`<div class="eq">${p.eq}</div>`:''}${p.eq2?`<div class="eq">${p.eq2}</div>`:''}${p.vis?`<div class="vis">${p.vis}</div>`:''}${ch}${line}</div></div>`;
 }
 function hwSheet(id,kind){
@@ -4079,7 +4098,7 @@ app.addEventListener('click',e=>{
    last-7-days chart, bedtime nudge, view as student, reading fonts, mystery box, fly-in
    ====================================================================== */
 /* ---- What's New: bump WHATS_VER whenever a big update ships ---- */
-const WHATS_VER='2026-10-12d',WHATS=[
+const WHATS_VER='2026-10-12f',WHATS=[
   ['Mystery box','Finish all 3 daily missions on 5 school days in a row to earn a mystery box. Some items are super rare.'],
   ['Daily mystery problem','One tricky problem a day. Solve it for bonus RP and detective badges.'],
   ['Weekly challenge','A new challenge every week with its own badge.'],
@@ -4380,7 +4399,7 @@ home=function(){
   const wk=weekNow();
   const nudge=totalSolved()>=15&&(!S.lastBackup||(Date.now()-new Date(S.lastBackup.replace(/-/g,'/')).getTime())>5*864e5||(new Date().getDay()===5&&S.lastBackup!==today()));
   app.innerHTML=`<header class="ahead home"><h1 class="abrand">Atom Math<span>.</span></h1><span class="hright">${S.teacher?'<button class="tchip" data-act="teacher">Teacher</button>':''}${!S.teacher&&S.tpause&&Date.now()-S.tpause<2*3600*1000?'<button class="tchip" data-act="tresume">Back to teacher</button>':''}<button class="peek mood-${moodOf()||'ok'}" data-act="atomtalk" aria-label="Atom"><img src="${MASCOT}" alt="" width="40" height="38">${moodOf()==='sleepy'?'<span class="zz" aria-hidden="true">z</span>':''}</button></span></header>
-  <button class="arank" data-tab-go="stats" aria-label="Your rank. Open stats"><span class="ark"><span class="arkl">${M?emblemMaster(22):emblem(rp,22)}<span class="clab">RANK</span><b style="color:var(--r-${M?'champion':r.cls})">${M?'Master':r.full}</b></span><span class="arkn">${nextTxt}</span></span>${pbar(M?100:pct)}</button>
+  <button class="arank" data-tab-go="stats" aria-label="Your rank. Open stats"><span class="ark"><span class="arkl">${M?emblemMaster(22):emblem(rp,22)}<span class="clab">RANK</span><b style="color:var(--r-${M?'champion':r.cls})">${M?'Master of 8th Grade':r.full}</b></span><span class="arkn">${nextTxt}</span></span>${pbar(M?100:pct)}</button>
   <div class="greetrow"><div><p class="greet">${greeting()}${S.name?', '+hwEsc(S.name):''}</p><p class="titleline">${hwEsc(ttl)} · ${rp.toLocaleString('en-US')} RP</p></div><div class="minis">
     ${mini(wd?'done':'',`--sc:#f08a24`,AI.flame,'Streak',wd?`${ds} day${ds===1?'':'s'} · done`:`${ds} day${ds===1?'':'s'}`,`<span class="pips">${[0,1,2].map(i=>`<i class="${wd?'on':''}"></i>`).join('')}</span>`,'data-act="warm"')}
     ${seasonMini}</div></div>
@@ -4395,7 +4414,7 @@ home=function(){
     <div class="mlist"${st.misOpen?'':' hidden'}>${ms.map(m=>{const v=Math.min(m.val(d),m.goal),dn=d.done.includes(m.id);return `<div class="mi${dn?' done':''}"><span>${dn?AI.check:''}</span><span class="mit">${m.txt}${pbar(100*v/m.goal)}</span><b>${dn?'Done':`${v}/${m.goal}`}</b></div>`}).join('')}
       <div class="mi"><span>${wk.done?AI.check:''}</span><span class="mit">Weekly · ${wk.c.txt}${pbar(100*wk.v/wk.c.goal)}</span><b>${wk.done?'Badge':wk.v+'/'+wk.c.goal}</b></div>
       <div class="mi"><span class="bx">${BOXSVG}</span><span class="mit">Mystery box · all 3 missions, 5 school days in a row${pbar(100*(S.boxProg||0)/5,'#d99a00')}</span><b>${S.boxProg||0}/5</b></div></div>
-    ${rowBtn({icon:AI.q,icls:'q',t:'Mystery problem',s:ms2==='win'?'Solved. New one tomorrow.':ms2==='miss'?'New one tomorrow.':`One try · +${MYSTERY_RP} RP`,attr:'data-act="mystery"',end:ms2==='win'?`<span class="okc">${AI.check}</span>`:AI.chev})}
+    ${rowBtn({icon:AI.q,icls:'q',t:'Mystery problem',s:ms2==='win'?'Solved. New one tomorrow.':ms2==='miss'?'New one tomorrow.':"One try. Same problem for the whole class.",attr:'data-act="mystery"',end:ms2==='win'?`<span class="okc">${AI.check}</span>`:AI.chev})}
     ${n?rowBtn({icon:AI.redo,icls:'bad',t:'My Mistakes',s:`${n} to fix in ${Object.keys(S.mist).length} topic${Object.keys(S.mist).length>1?'s':''}`,attr:'data-act="mist"'}):''}
   </div>
   `;
@@ -4458,7 +4477,7 @@ function rewardsScreen(){
   const cnt=cat=>{const c=LOCKER[cat];const v=visItems(c);return `${v.filter(unlocked).length} of ${v.length} unlocked`};
   const th=LOCKER.theme.items.find(i=>i[0]===(themeUsable(S.look.theme)?S.look.theme:'auto'))||LOCKER.theme.items[0];
   app.innerHTML=`${ahead('Rewards')}
-  <div class="card preview"><div class="pvrow">${M?emblemMaster(54):emblem(rp,54)}<div><b class="pvname" style="color:var(--r-${M?'champion':r.cls})">${M?'Master':r.full}</b><span class="pvt">${hwEsc(lookItem('title')[1])}</span><span class="fine">${th[1]} theme</span></div><img class="pvbot" src="${MASCOT}" alt=""></div></div>
+  <div class="card preview"><div class="pvrow">${M?emblemMaster(54):emblem(rp,54)}<div><b class="pvname" style="color:var(--r-${M?'champion':r.cls})">${M?'Master of 8th Grade':r.full}</b><span class="pvt">${hwEsc(lookItem('title')[1])}</span><span class="fine">${th[1]} theme</span></div><img class="pvbot" src="${MASCOT}" alt=""></div></div>
   ${nu?`<div class="card nextu"><span class="clab">NEXT UNLOCK</span><b>${nu.it[2]} · ${Math.max(0,rpOfIdx(nu.i)-peakRp())} RP away</b><span class="fine">${nu.it[1]} ${({theme:'theme',accent:'accent color',title:'title',celeb:'rank-up effect'})[nu.cat]}</span></div>`:''}
   <div class="rcards">${REW_CATS.map(([k,n,d])=>`<button class="rcard" data-rcat="${k}"><b>${n}</b><span>${d}</span><small>${k==='badges'?`${BADGES.filter(b=>S.badges[b[0]]).length} of ${BADGES.filter(b=>!b[6]||S.badges[b[0]]).length} earned`:k==='box'?`${Object.keys(S.boxOwned||{}).length} of ${BOX_ITEMS.length} found${S.boxes?` · ${S.boxes} to open`:''}`:cnt(k)}</small></button>`).join('')}</div>
   ${S.teacher?'<p class="fine">Teacher view: everything is open. Each tile shows what a student needs.</p>':''}`;
@@ -4532,20 +4551,12 @@ WHATS.unshift(['A fresh new look','Atom Math now matches Atom: new tabs at the b
   const us=unitScreen;unitScreen=function(){us.apply(this,arguments);fix()};
   const ls=lockScreen;lockScreen=function(){ls.apply(this,arguments);fix()};})();
 
-/* ---- Scrolling: the body is the scroll box, so short pages can't bounce or scroll on iPhone ---- */
-(function(){
-  const sc=()=>document.body;
-  const to=window.scrollTo.bind(window);
-  window.scrollTo=function(a,b){const y=(a&&typeof a==='object')?(a.top||0):(b||0);try{sc().scrollTop=y}catch(e){}to(0,0)};
-  try{Object.defineProperty(window,'scrollY',{configurable:true,get:()=>sc().scrollTop});Object.defineProperty(window,'pageYOffset',{configurable:true,get:()=>sc().scrollTop})}catch(e){}
-})();
-
 /* ---- Overlay safety: never leave a dim screen with nothing on it ---- */
 new MutationObserver(()=>{if(!ov.hidden&&!ov.querySelector('.ovbox'))ov.hidden=true}).observe(ov,{attributes:true,childList:true});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!ov.hidden){ov.hidden=true;ov.innerHTML=''}});
 
 /* ---- Updates: version number + "Update ready" bar ---- */
-const APP_VER='2026.10.12-6';
+const APP_VER='2026.10.12-8';
 function showUpdateBar(){
   if(document.getElementById('updbar'))return;
   const d=document.createElement('button');d.id='updbar';d.type='button';d.innerHTML='<b>Update ready</b><span>Tap to refresh</span>';
@@ -4660,6 +4671,149 @@ trophies=statsScreen;
 (function(){const w=whatsNew;whatsNew=function(){w();const b=ov.querySelector('.ovbox');if(b)b.insertAdjacentHTML('afterbegin','<button class="xbtn abs" data-wel="done" aria-label="Close">✕</button>')}})();
 
 WHATS.unshift(['Settings tabs','Settings now has tabs like Atom: Profile, Display, Learning, Access and More. New: Simple mode, eye breaks, night mode and sound volume.']);
+
+/* ======================================================================
+   ATOM MATH — round 4: fair rank system, topic completion, cumulative Ranked,
+   finished-for-today state, best-score rewards, y = __x + __ inputs
+   ====================================================================== */
+
+/* ---------- RANK = what you have mastered ----------
+   (updated) Each unit = 395 RP (355 topics + 40 test). Halfway (5 units) = Gold I. All 10 units + all tests = Champion I (4,000).
+   Missions, mystery problems and game modes never change rank. Above Champion I: Master of 8th Grade
+   = 100% on every unit test AND every Ranked robot beaten.
+   Each unit is worth 350 RP: 300 from its topics + 50 for passing its unit test.
+   A topic pays out up to its share of the 300. 80% comes from practice; the last 20% arrives the moment
+   the topic is mastered. After that the topic pays nothing more (practice is still allowed, just for fun).
+   10 units × 350 = 3,500 = Champion V (needs all 10 unit tests).
+   Champion IV–I (up to 4,000) come from 100% unit test scores (+30 each) and a small bonus pool
+   (missions, mystery problems, lessons): at most 20 RP per unit you have started.
+   Quick Play, Last Stand and Ranked never change your rank. */
+const UNIT_PRACTICE=355,UNIT_TEST=40,COURSE_BONUS=50,PRE_MASTER=.8;
+function topicBudget(id){const u=UNITS.find(x=>x.topics.some(t=>t[0]===id));if(!u)return 0;const tot=u.topics.reduce((a,[t])=>a+weightOf(t),0);return UNIT_PRACTICE*weightOf(id)/tot}
+function topicCredit(id){const b=topicBudget(id);if(!b)return 0;if(topicMastered(id))return b;return Math.max(0,Math.min(T(id).rp||0,b*PRE_MASTER))}
+function unitCredit(u){let r=0;for(const [id] of u.topics)r+=topicCredit(id);const t=S.tests[u.n];if(t&&t.passed)r+=UNIT_TEST;return r}
+function computeRP(){
+  let r=UNITS.reduce((a,u)=>a+unitCredit(u),0);
+  if(allPassed())r+=COURSE_BONUS;
+  r=Math.round(r);if(!allPassed())r=Math.min(r,CHAMP_STEPS[0]-1);
+  return Math.max(START_RP,Math.min(r,CHAMP_I_RP));
+}
+applyRP=function(delta,topic){
+  const prev=rpNow(),before=rankInfo(prev),peakBefore=rankIdx(peakRp());
+  if(topic){if(!topicMastered(topic)){const t=T(topic);t.rp=(t.rp||0)+delta}}
+  else if(delta>0)S.bonusRP=(S.bonusRP||0)+delta;
+  S.rp=computeRP();const d=S.rp-prev;S.peak=Math.max(S.peak||0,S.rp);
+  const fresh=unlocksBetween(peakBefore,rankIdx(S.peak));if(fresh.length)st.newUnlocks=(st.newUnlocks||[]).concat(fresh);
+  if(st.sess)st.sess.rp+=d;save();
+  const after=rankInfo(S.rp);
+  if(after.full!==before.full){if(d>0)celebrate();else toast(`Deranked · ${after.full}`,'down')}
+  return d;
+};
+/* one-time: move everyone onto the new system */
+if(S.econ!==3){S.rp=computeRP();S.peak=S.rp;S.econ=3;save()}
+
+/* ---------- topic completion (like finishing a lesson) ---------- */
+(function(){
+  const g0=grade;
+  grade=function(correct,choiceBtn){
+    const p=st.p,was=p&&p.topic?topicMastered(p.topic):true;
+    const r=g0.apply(this,arguments);
+    if(p&&!was&&topicMastered(p.topic)&&st.mode===null&&!p.focus&&!p.mystery&&UNITS.some(u=>u.topics.some(t=>t[0]===p.topic))){
+      st.justMastered=p.topic;const d=applyRP(0,null);st.masterGain=(st.masterGain||0)+d;
+      const fb=document.getElementById('fb');if(fb)fb.insertAdjacentHTML('beforeend','<div class="mastnote">Topic mastered! Tap Next.</div>');
+    }
+    return r;
+  };
+  const np=newProblem;
+  newProblem=function(){if(st.justMastered&&st.mode===null){const id=st.justMastered;st.justMastered=null;return masteredScreen(id)}return np.apply(this,arguments)};
+})();
+function masteredScreen(id){
+  const u=unitOfTopic(id),nm=u.topics.find(t=>t[0]===id)[1],left=u.topics.filter(([t])=>!topicMastered(t)),T0=S.tests[u.n];
+  st.screen='mastered';st.mode=null;sfx('mission');
+  const next=left[0];const allDone=!left.length;
+  app.innerHTML=`<div class="card mastered"><img class="mbot" src="${MASCOT}" alt=""><div class="mcheck2">${AI.check}</div><span class="clab">TOPIC MASTERED</span><h1>${nm}</h1>
+    <p class="lede">${allDone?(T0&&T0.passed?'You have mastered every topic in this unit.':'Every topic in this unit is mastered. You are ready for the unit test!'):`${u.topics.length-left.length} of ${u.topics.length} topics mastered in Unit ${u.n}.`}</p>
+    <p class="mrp">+${Math.round(topicBudget(id))} RP earned for this topic</p><p class="fine">You can keep practicing it any time. It won't add more RP.</p></div>
+  <div class="mactions">${allDone&&!(T0&&T0.passed)?`<button class="btn" data-act="mtest" data-u="${u.n}">Take the Unit ${u.n} test</button>`:next?`<button class="btn" data-topic="${next[0]}">Next topic: ${next[1]}</button>`:''}
+    <button class="btn ghost" data-act="munit" data-u="${u.n}">Back to Unit ${u.n}</button></div>`;
+  if(typeof confetti==='function'){app.querySelector('.mastered').insertAdjacentHTML('afterbegin','<canvas id="confetti"></canvas>');setTimeout(confetti,150)}
+  window.scrollTo(0,0);
+}
+app.addEventListener('click',e=>{const b=e.target.closest('[data-act="mtest"],[data-act="munit"]');if(!b)return;e.stopPropagation();
+  st.unit=+b.dataset.u;st.screen='unit';unitScreen();window.scrollTo(0,0);
+  if(b.dataset.act==='mtest'){const t=app.querySelector('[data-act="starttest"],[data-act="test"]');if(t)t.click()}},true);
+/* "Mastered" chip while practicing a finished topic */
+(function(){const d0=decorate;decorate=function(){d0();const p=st.p,c=document.querySelector('#app .card');
+  if(p&&c&&st.mode===null&&!p.focus&&!p.mystery&&topicMastered(p.topic)&&!c.querySelector('.mchip2'))c.insertAdjacentHTML('afterbegin','<div class="mchip2">Mastered · practice for fun, no RP</div>')}})();
+
+/* ---------- y = __x + __ answer boxes ---------- */
+function mbInputs(dis){return `<div class="answer mbrow"><span class="pair">y = <input id="a1" aria-label="slope" placeholder="m" autocomplete="off" ${dis}>x + <input id="a2" aria-label="y-intercept" placeholder="b" autocomplete="off" ${dis}></span><span class="fine mbhint">Use a negative number if the intercept is below 0.</span></div>`}
+
+/* ---------- Ranked: cumulative ladder ---------- */
+RK.length=0;RK.push(
+ {name:'Bolt',tag:'Unit 1',col:'#2f8cf5',secs:45},
+ {name:'Gizmo',tag:'Units 1–2',col:'#1c9a5c',secs:42},
+ {name:'Cog',tag:'Units 1–3',col:'#c49412',secs:40},
+ {name:'Sprocket',tag:'Units 1–4',col:'#e8670f',secs:38},
+ {name:'Volt',tag:'Units 1–5',col:'#7c4fe0',secs:35},
+ {name:'Nova',tag:'Units 1–6',col:'#d6327f',secs:32},
+ {name:'Flux',tag:'Units 1–7',col:'#0f9aa8',secs:30},
+ {name:'Quasar',tag:'Units 1–8',col:'#5b6bd8',secs:28},
+ {name:'Titan',tag:'Units 1–9',col:'#7a5a3c',secs:25},
+ {name:'OMEGA-8',tag:'Final boss · Units 1–10. 10 questions, get every one right.',col:'#14213d',secs:60,boss:true});
+function genHard(id,n){let best=null,bs=-1;for(let i=0;i<n;i++){const p=gen(id),s=complexity(p);if(s>bs){bs=s;best=p}}return best}
+const rkGen=(id,lvlUnit,unitN)=>{const h=lvlUnit-unitN;return h<=0?genBest(id,2):genHard(id,1+Math.min(h,6))};
+const rkOpen=i=>S.teacher||(i<=(S.ranked.beat||0)&&unitOpen(i+1));
+rankedHome=function(){
+  clearInterval(st.timer);st.mode=null;st.rk=null;st.screen='ranked';const beat=S.ranked.beat||0;
+  app.innerHTML=`<button class="back" data-tab-go="play">${AI.back}Play</button><div class="eyebrow">Ranked${S.teacher?' · teacher preview':''}</div><h1>Beat the robots</h1>
+  <p class="lede">Each robot quizzes you on every unit up to it. Later robots ask tougher questions from earlier units. Ranked is for bragging rights. It doesn't change your rank.</p>
+  <div class="rkl">${RK.map((c,i)=>{const done=i<beat,open=rkOpen(i),next=i===beat;
+    return `<div class="rkn${done?' done':''}${next&&open?' next':''}${open?'':' lock'}"><div class="rkface">${robot(c.col,52,c.boss)}</div><div class="rkt"><b>${c.name}</b><span class="ts">${c.tag}</span><span class="ts">${c.boss?'10 questions · '+c.secs+'s each':'First to 4 · '+c.secs+'s per question'}</span></div>
+    ${open?`<button class="btn small${done?' ghost':''}" data-act="rkplay" data-lvl="${i}">${done?'Rematch':'Play'}</button>`:`<span class="rklock" title="${i>beat?'Beat '+RK[i-1].name+' first':'Opens with Unit '+(i+1)}">${AI.lock}</span>`}</div>`}).join('')}</div>`;
+  window.scrollTo(0,0);
+};
+omegaQueue=function(){return UNITS.map(u=>{const p=u.topics.filter(([id])=>!SUPPORTING.has(id));return {id:pick(p.length?p:u.topics)[0],unit:u.n}})};
+rkQuestion=function(){
+  const R=st.rk,c=RK[R.lvl],k=R.lvl+1;R.round++;
+  if(R.boss){const q=R.queue[R.round-1];st.unit=q.unit;st.p=rkGen(q.id,10,q.unit)}
+  else{const units=UNITS.filter(u=>u.n<=k);const u=Math.random()<.4?units[units.length-1]:pick(units);st.unit=u.n;st.p=rkGen(pick(u.topics)[0],k,u.n)}
+  st.tries=0;st.done=false;st.hintLevel=0;R.end=Date.now()+R.secs*1000;
+  rkRender();clearInterval(st.timer);st.timer=setInterval(rkTick,100);window.scrollTo(0,0);
+};
+
+/* ---------- unlock kinds: best scores and robots ---------- */
+(function(){
+  const rm=reqMet,rl=reqLabel,ir=isRankReq;
+  reqMet=function(req){let m;if(req&&!S.teacher){if((m=req.match(/^QP (\d+)$/)))return (S.stats.rapidBest||0)>=+m[1];if((m=req.match(/^LS (\d+)$/)))return (S.stats.survBest||0)>=+m[1];if((m=req.match(/^Robots (\d+)$/)))return (S.ranked.beat||0)>=+m[1]}return rm(req)};
+  reqLabel=function(req){let m;if((m=req.match(/^QP (\d+)$/)))return `<span class="ureq">${m[1]}</span> Score ${m[1]} in Quick Play`;if((m=req.match(/^LS (\d+)$/)))return `<span class="ureq">${m[1]}</span> Reach ${m[1]} in Last Stand`;if((m=req.match(/^Robots (\d+)$/)))return `<span class="ureq">${m[1]}</span> ${+m[1]===10?'Beat OMEGA-8':'Beat '+m[1]+' Ranked robots'}`;return rl(req)};
+  isRankReq=r=>ir(r)&&!/^(QP|LS|Robots) /.test(r||'');
+  LOCKER.title.items.push(['qp15','Speedster','QP 15'],['qp25','Lightning Round','QP 25'],['qp35','Faster Than Light','QP 35'],['ls15','Survivor','LS 15'],['ls30','Unbreakable','LS 30'],['ls50','Last One Standing','LS 50'],
+    ['rk3','Robot Wrangler','Robots 3'],['rk6','Circuit Breaker','Robots 6'],['rk10','OMEGA Slayer','Robots 10']);
+  LOCKER.accent.items.push(['qpgold','Lightning Gold','QP 30',['#a87200'],['#ffd23f']],['lsred','Iron Red','LS 40',['#b3261e'],['#ff6b5e']]);
+  BADGES.push(['rapid35','Blur','Score 35 in Quick Play','35','var(--r-gold)',()=>S.stats.rapidBest>=35],['surv50','Legend','Reach 50 in Last Stand','50','var(--bad)',()=>S.stats.survBest>=50],
+    ['robot1','Robot Rookie','Beat your first Ranked robot','R1','var(--r-platinum)',()=>(S.ranked.beat||0)>=1],['robot10','OMEGA Down','Beat OMEGA-8','Ω','var(--r-champion)',()=>(S.ranked.beat||0)>=10]);
+})();
+function brag(kind,score){
+  const goals=kind==='rapid'?[[15,'Speedster title'],[25,'Lightning Round title'],[30,'Lightning Gold color'],[35,'Faster Than Light title']]:[[15,'Survivor title'],[30,'Unbreakable title'],[40,'Iron Red color'],[50,'Last One Standing title']];
+  const best=kind==='rapid'?S.stats.rapidBest:S.stats.survBest,g=goals.find(x=>best<x[0]);
+  return `<div class="bragline">${g?`Reach <b>${g[0]}</b> to unlock the ${g[1]}.`:'You have every reward for this mode. Keep chasing your best.'}</div><div class="fine">Game modes are for bragging rights. They don't change your rank.</div>`;
+}
+
+/* ---------- Today: finished things disappear ---------- */
+(function(){const h0=home;home=function(){h0.apply(this,arguments);
+  const list=app.querySelector('.card.list');if(!list)return;
+  const wd=warmDone(),md=D().done.length>=3,ms=mysteryState();
+  const hide=sel=>{const r=list.querySelector(sel);if(r){r.remove();return true}};
+  if(wd)hide('[data-act="warm"]');if(md){hide('[data-act="tmis"]');hide('.mlist')}if(ms)hide('[data-act="mystery"]');
+  if(wd&&md&&ms){const ds=dayStreak();list.insertAdjacentHTML('beforebegin',`<div class="card alldone"><img src="${MASCOT}" alt="" width="62"><div><b>You're all set for today</b><p class="fine">Warm-up, missions and the mystery problem are done. Your ${ds}-day streak is safe. Atom will have new challenges tomorrow.</p></div></div>`)}
+  if(!list.querySelector('.lrow')){list.previousElementSibling&&list.previousElementSibling.classList.contains('alldone')?list.remove():list.remove()}
+}})();
+
+(function(){const r0=rkResult;rkResult=function(){r0.apply(this,arguments);if(!S.master&&allPerfect()&&(S.ranked.beat||0)>=10){S.master=true;save();setTimeout(showMaster,600)}}})();
+WHATS.unshift(['Master of 8th Grade','The top level. Score 100% on every unit test and beat every Ranked robot.'],['Ranked is open','Beat the robots in Play. Each robot opens with its unit.']);
+WHATS.unshift(['Fair ranks','Your rank now shows what you have mastered. Each topic pays out until you master it, and each unit test adds more. Game modes are for bragging rights and unlock their own rewards.'],
+  ['Ranked ladder','Ten robots. Each one covers every unit up to it, with tougher questions from earlier units.']);
 
 window.__G={G,gen,startRanked,genEasy,rampLevel,applyShields,parseNum,close,UNITS};
 applyLook();
