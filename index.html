@@ -8348,6 +8348,12 @@ window.AtomFX = (function () {
   // shared with Atom Reading: same ids both sides
   try { if (window.__atomLook && L) window.__atomLook.take(L.profile()); } catch (e) {}
 })();
+/* publish the badge list so the main page can show Reading and Math badges together */
+(function () {
+  const pub = () => { try { localStorage.setItem('atom:bdg:math', JSON.stringify(BADGES.map(b => [b[0], b[1], b[2], S.badges[b[0]] || '']))); } catch (e) {} };
+  try { const c0 = checkBadges; checkBadges = function () { const r = c0.apply(this, arguments); pub(); return r; }; } catch (e) {}
+  pub();
+})();
 
 /* ===================== Unit tests unlock after every topic in the unit is mastered (placement still counts) ===================== */
 (function () {
